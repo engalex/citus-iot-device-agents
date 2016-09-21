@@ -1,7 +1,7 @@
 #!/bin/bash
 export PYTHONIOENCODING=utf8
 LOCK_STATE=$HOME/.aws/certs/.lock-state
-if [ -f $DEVICE_STATE ];
+if [ -f $LOCK_STATE ];
 then
    	echo "The device has already installed."
 else
@@ -23,5 +23,7 @@ else
 		RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['keyPair']['PrivateKey']")	
 		echo "${RESULT}" >> "$HOME/.aws/certs/${DEVICE_ID}-private-pem.key"
 		curl -o "$HOME/.aws/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
+		RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['device']['status']")
+		echo "${RESULT}" >> ${LOCK_STATE}
 	fi
 fi
