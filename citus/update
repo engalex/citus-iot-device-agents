@@ -1,5 +1,15 @@
 #!/bin/bash
 export PYTHONIOENCODING=utf8
-CERTIFICATES='{}'
-DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L  http://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
-echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']"
+LOCK_STATE=$HOME/.aws/certs/.lock-state
+if [ -f $LOCK_STATE ];
+then
+	echo "Checking for Software Update - ID:${DEVICE_ID}"
+	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
+	
+	SOFTWARE_IMG=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['software']")
+	HAS_UPDATED=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['updated']")
+	
+	if [ "${HAS_UPDATED}" == "false" ]; then
+		echo "Updating the software image: ${SOFTWARE_IMG}"
+	fi
+fi
