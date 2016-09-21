@@ -14,7 +14,9 @@ else
 	if [ "${DEVICE_STATUS}" == "unregistered" ]; then
 		PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/initialization?secret_key=${SECRET_KEY})	
 		PINCODE=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['pincode']")
+		echo "====================="
 		echo "ACTIVATION CODE: ${PINCODE}"
+		echo "====================="
 		PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'","pincode":"'"${PINCODE}"'"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/registration?secret_key=${SECRET_KEY})
 		mkdir -p $HOME/.aws/certs/
 		RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['certificatePem']")	
