@@ -1,7 +1,15 @@
 #!/bin/bash
 export PYTHONIOENCODING=utf8
-CERTIFICATES='{}'
-echo "ID:${DEVICE_ID}"
-echo "KEY:${SECRET_KEY}"
-DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L  http://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
-echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']"
+SERVICE_URL='http://apps.citus.io/apisrv/device-lifecycle-service/device'
+echo "Activating the device with ID:${DEVICE_ID}"
+DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_URL}/${DEVICE_ID}?secret_key=${SECRET_KEY})
+
+DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']")
+SERIAL_NUMBER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']")
+
+if [ "${DEVICE_STATUS}" == "unregistered" ] then
+	PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"${DEVICEID}","serialNumber":"${SERIAL_NUMBER}","status": "${DEVICE_STATUS}"}' -L ${SERVICE_URL}/${DEVICE_ID}?secret_key=${SECRET_KEY})
+	PINCODE=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['pincode']")
+	echo "Your ACTIVATION CODE: ${PINCODE}"
+fi
+
