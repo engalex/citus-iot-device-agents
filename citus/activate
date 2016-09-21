@@ -26,6 +26,6 @@ else
 		RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['device']['status']")
 		echo "${RESULT}" >> ${LOCK_STATE}
 	else		
-		echo "This device ID ${DEVICE_ID} has already used on another device!"
+		echo "The device with ID: ${DEVICE_ID} has already used on another device!"
 	fi
 fi
