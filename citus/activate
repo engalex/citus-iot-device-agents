@@ -26,6 +26,7 @@ else
 		RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['device']['status']")
 		echo "${RESULT}" >> ${LOCK_STATE}
 	else
+		mkdir -p $HOME/.aws/certs/
 		echo "${DEVICE_STATUS}" >> ${LOCK_STATE}
 		echo "This device has already installed!"
 	fi
