@@ -1,5 +1,12 @@
 #!/bin/bash
 export PYTHONIOENCODING=utf8
-CERTIFICATES='{}'
-DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L  http://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
-echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']"
+LOCK_STATE=$HOME/.aws/certs/.lock-state
+if [ -f $LOCK_STATE ];
+then
+   	echo "Removing device ${DEVICE_ID}..."
+   	rm -rf $HOME/.aws/certs/
+   	citus-device revoke
+   	echo "The device is cleaned up."
+else
+	echo "This device is not installed yet."
+fi

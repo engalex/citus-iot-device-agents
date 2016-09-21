@@ -1,2 +1,18 @@
 #!/bin/bash
-echo "Revoking..."
+LOCK_STATE=$HOME/.aws/certs/.lock-state
+if [ -f $LOCK_STATE ];
+then   	
+	echo "Deactivating the device with ID:${DEVICE_ID}"
+	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
+	
+	DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']")
+	SERIAL_NUMBER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']")
+	
+	if [ "${DEVICE_STATUS}" == "registered" ]; then
+		PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/revocation?secret_key=${SECRET_KEY})		
+		NEW_STATUS=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['status']")
+		echo "Revoked Status: ${NEW_STATUS}"
+	else		
+		echo "The DeviceID: ${DEVICE_ID} has already used on another device! Please pickup another one and try again."
+	fi
+fi

@@ -4,8 +4,7 @@ LOCK_STATE=$HOME/.aws/certs/.lock-state
 if [ -f $LOCK_STATE ];
 then
    	echo "The device ${DEVICE_ID} has already installed successfully."
-else
-	SERVICE_URL=http://apps.citus.io/apisrv/device-lifecycle-service/device
+else	
 	echo "Activating the device with ID:${DEVICE_ID}"
 	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
 	
