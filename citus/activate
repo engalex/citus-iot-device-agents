@@ -1,5 +1,7 @@
 #!/bin/bash
 export PYTHONIOENCODING=utf8
 CERTIFICATES='{}'
+echo "ID:${DEVICE_ID}"
+echo "KEY:${SECRET_KEY}"
 DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L  http://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
 echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']"
