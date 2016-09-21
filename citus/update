@@ -11,5 +11,7 @@ then
 	
 	if [ "${HAS_UPDATED}" == "false" ]; then
 		echo "Updating the software image: ${SOFTWARE_IMG}"
+		curl -H "Content-Type: application/json" -X POST -d '{"updated":true}' -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY}
+		echo "The device ${DEVICE_ID} is up-to-date."
 	fi
 fi
