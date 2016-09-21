@@ -6,18 +6,16 @@ import re
 import cgi
  
 class LocalData(object):
-  records = {}
+  results = {}
  
 class HTTPRequestHandler(BaseHTTPRequestHandler):
   def do_POST(self):
-    if None != re.search('/api/v1/addrecord/*', self.path):
+    if None != re.search('/api/v1/activate', self.path):
       ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
       if ctype == 'application/json':
         length = int(self.headers.getheader('content-length'))
-        data = cgi.parse_qs(self.rfile.read(length), keep_blank_values=1)
-        recordID = self.path.split('/')[-1]
-        LocalData.records[recordID] = data
-        print "record %s is added successfully" % recordID
+        data = cgi.parse_qs(self.rfile.read(length), keep_blank_values=0)        
+        print "record %s is added successfully" % data
       else:
         data = {}
       self.send_response(200)
@@ -29,13 +27,13 @@ class HTTPRequestHandler(BaseHTTPRequestHandler):
     return
  
   def do_GET(self):
-    if None != re.search('/api/v1/getrecord/*', self.path):
-      recordID = self.path.split('/')[-1]
-      if LocalData.records.has_key(recordID):
+    if None != re.search('/api/v1/getcode', self.path):
+      LocalData.results[pincode] = "1234"
+      if LocalData.results.has_key(pincode):
         self.send_response(200)
         self.send_header('Content-Type', 'application/json')
         self.end_headers()
-        self.wfile.write(LocalData.records[recordID])
+        self.wfile.write(LocalData.results[pincode])
       else:
         self.send_response(400, 'Bad Request: record does not exist')
         self.send_header('Content-Type', 'application/json')
@@ -65,8 +63,8 @@ class SimpleHttpServer():
   def waitForThread(self):
     self.server_thread.join()
  
-  def addRecord(self, recordID, jsonEncodedRecord):
-    LocalData.records[recordID] = jsonEncodedRecord
+  def addPincode(self, pincode, value):
+    LocalData.results[pincode] = value
  
   def stop(self):
     self.server.shutdown()

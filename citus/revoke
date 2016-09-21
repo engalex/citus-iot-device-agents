@@ -1,5 +1,5 @@
 #!/bin/bash
-LOCK_STATE=$HOME/.aws/certs/.lock-state
+LOCK_STATE=$HOME/.agent/.lock-state
 if [ -f $LOCK_STATE ];
 then   	
 	echo "Deactivating the device with ID:${DEVICE_ID}"

@@ -1,6 +1,6 @@
 #!/bin/bash
 export PYTHONIOENCODING=utf8
-LOCK_STATE=$HOME/.aws/certs/.lock-state
+LOCK_STATE=$HOME/.agent/.lock-state
 if [ -f $LOCK_STATE ];
 then
 	echo "Checking for Software Update - ID:${DEVICE_ID}"
