@@ -7,7 +7,7 @@ DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_URL}/${DEV
 DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']")
 SERIAL_NUMBER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']")
 
-if [ "${DEVICE_STATUS}" == "unregistered" ] then
+if [ "${DEVICE_STATUS}" == "unregistered" ]; then
 	PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"${DEVICEID}","serialNumber":"${SERIAL_NUMBER}","status": "${DEVICE_STATUS}"}' -L ${SERVICE_URL}/${DEVICE_ID}?secret_key=${SECRET_KEY})
 	PINCODE=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['pincode']")
 	echo "Your ACTIVATION CODE: ${PINCODE}"
