@@ -12,6 +12,10 @@ if [ "${DEVICE_STATUS}" == "unregistered" ]; then
 	PINCODE=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['pincode']")
 	echo "ACTIVATION CODE: ${PINCODE}"
 	PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'","pincode":"'"${PINCODE}"'"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/registration?secret_key=${SECRET_KEY})
-	CERTIFICATES=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']")
-	echo "CERTIFICATES:\r\n${CERTIFICATES}"
+	mkdir -p $HOME/.aws/certs/
+	RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['certificatePem']")	
+	echo "${RESULT}" >> "$HOME/.aws/certs/${DEVICE_ID}-certificate.pem.crt"
+	RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['keyPair']['PrivateKey']")	
+	echo "${RESULT}" >> "$HOME/.aws/certs/${DEVICE_ID}-private-pem.key"
+	curl -o "$HOME/.aws/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 fi
