@@ -1,9 +1,9 @@
 #!/bin/bash
 export PYTHONIOENCODING=utf8
-SERVICE_URL='http://apps.citus.io/apisrv/device-lifecycle-service/device'
+SERVICE_URL=http://apps.citus.io/apisrv/device-lifecycle-service/device
 echo "Activating the device with ID:${DEVICE_ID}"
 DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_URL}/${DEVICE_ID}?secret_key=${SECRET_KEY})
-
+echo "\r\n${DEVICE_OBJECT}\r\n"
 DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']")
 SERIAL_NUMBER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']")
 
