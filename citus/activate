@@ -8,7 +8,8 @@ DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.
 SERIAL_NUMBER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']")
 
 if [ "${DEVICE_STATUS}" == "unregistered" ]; then
-        PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"${DEVICE_ID}","serialNumber":"${SERIAL_NUMBER}","status":"${DEVICE_STATUS}"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/initialization?secret_key=${SECRET_KEY})
-        PINCODE=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['pincode']")
-        echo "Your ACTIVATION CODE: ${PINCODE}"
+	PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"${DEVICE_ID}","serialNumber":"${SERIAL_NUMBER}","status":"${DEVICE_STATUS}"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/initialization?secret_key=${SECRET_KEY})
+	echo "Initialization: $PAYLOAD"
+	PINCODE=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['pincode']")
+	echo "Your ACTIVATION CODE: ${PINCODE}"
 fi
