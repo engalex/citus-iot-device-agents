@@ -1,21 +1,27 @@
 #!/bin/bash
 export PYTHONIOENCODING=utf8
-SERVICE_URL=http://apps.citus.io/apisrv/device-lifecycle-service/device
-echo "Activating the device with ID:${DEVICE_ID}"
-DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
-
-DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']")
-SERIAL_NUMBER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']")
-
-if [ "${DEVICE_STATUS}" == "unregistered" ]; then
-	PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/initialization?secret_key=${SECRET_KEY})	
-	PINCODE=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['pincode']")
-	echo "ACTIVATION CODE: ${PINCODE}"
-	PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'","pincode":"'"${PINCODE}"'"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/registration?secret_key=${SECRET_KEY})
-	mkdir -p $HOME/.aws/certs/
-	RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['certificatePem']")	
-	echo "${RESULT}" >> "$HOME/.aws/certs/${DEVICE_ID}-certificate.pem.crt"
-	RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['keyPair']['PrivateKey']")	
-	echo "${RESULT}" >> "$HOME/.aws/certs/${DEVICE_ID}-private-pem.key"
-	curl -o "$HOME/.aws/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
+LOCK_STATE=$HOME/.aws/certs/.lock-state
+if [ -f $DEVICE_STATE ];
+then
+   	echo "The device has already installed."
+else
+	SERVICE_URL=http://apps.citus.io/apisrv/device-lifecycle-service/device
+	echo "Activating the device with ID:${DEVICE_ID}"
+	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
+	
+	DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']")
+	SERIAL_NUMBER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']")
+	
+	if [ "${DEVICE_STATUS}" == "unregistered" ]; then
+		PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/initialization?secret_key=${SECRET_KEY})	
+		PINCODE=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['pincode']")
+		echo "ACTIVATION CODE: ${PINCODE}"
+		PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'","pincode":"'"${PINCODE}"'"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/registration?secret_key=${SECRET_KEY})
+		mkdir -p $HOME/.aws/certs/
+		RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['certificatePem']")	
+		echo "${RESULT}" >> "$HOME/.aws/certs/${DEVICE_ID}-certificate.pem.crt"
+		RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['keyPair']['PrivateKey']")	
+		echo "${RESULT}" >> "$HOME/.aws/certs/${DEVICE_ID}-private-pem.key"
+		curl -o "$HOME/.aws/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
+	fi
 fi
