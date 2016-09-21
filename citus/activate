@@ -27,5 +27,6 @@ else
 		echo "${RESULT}" >> ${LOCK_STATE}
 	else
 		echo "${DEVICE_STATUS}" >> ${LOCK_STATE}
+		echo "This device has already installed!"
 	fi
 fi
