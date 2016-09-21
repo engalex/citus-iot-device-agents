@@ -1,3 +1,4 @@
+#!/bin/bash
 export PYTHONIOENCODING=utf8
 export DEVICE_ID="55feb92a-a632-4ccd-abd5-08e0c97c8803"
 export SECRET_KEY="3051d6bd068148d38988ad2cc916ae4b"
