@@ -1,7 +1,2 @@
 #!/bin/bash
-export PYTHONIOENCODING=utf8
-export DEVICE_ID="55feb92a-a632-4ccd-abd5-08e0c97c8803"
-export SECRET_KEY="3051d6bd068148d38988ad2cc916ae4b"
-CERTIFICATES='{}'
-DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L  http://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
-echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']"
+echo "Revoking..."
