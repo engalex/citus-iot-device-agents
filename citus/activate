@@ -25,9 +25,7 @@ else
 		curl -o "$HOME/.aws/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 		RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['device']['status']")
 		echo "${RESULT}" >> ${LOCK_STATE}
-	else
-		mkdir -p $HOME/.aws/certs/
-		echo "${DEVICE_STATUS}" >> ${LOCK_STATE}
-		echo "This device has already installed!"
+	else		
+		echo "This device has already used on another devices!"
 	fi
 fi
