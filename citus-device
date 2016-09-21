@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo /usr/sbin/citus/$1
+/usr/sbin/citus/$1
