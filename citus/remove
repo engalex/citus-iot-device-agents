@@ -4,8 +4,8 @@ LOCK_STATE=$HOME/.aws/certs/.lock-state
 if [ -f $LOCK_STATE ];
 then
    	echo "Removing device ${DEVICE_ID}..."
-   	rm -rf $HOME/.aws/certs/
    	citus-device revoke
+   	rm -rf $HOME/.aws/certs/   	
    	echo "The device is cleaned up."
 else
 	echo "This device is not installed yet."
