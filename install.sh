@@ -11,7 +11,7 @@ cp citus-device /usr/sbin/
 chmod +x /usr/sbin/citus-device
 chmod +x /usr/sbin/citus/*
 
-echo "${BLUE}INFO: Installing docker engine...${NC}"
+echo -e "${BLUE}INFO: Installing docker engine...${NC}"
 curl -sSL https://get.docker.com | sh
 echo $(docker -v)
 echo -e "${GREEN}=================================
