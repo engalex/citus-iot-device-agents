@@ -1,2 +1,12 @@
 #!/bin/bash
+if [ -z "${DEVICE_ID}" ]; then
+	if [ -f "${HOME}/.agent/.device-id" ]; then
+		export DEVICE_ID=$(cat ${HOME}/.agent/.device-id)
+	fi
+fi
+if [ -z "${SECRET_KEY}" ]; then
+	if [ -f "${HOME}/.agent/.secret-key" ]; then
+		export SECRET_KEY=$(cat ${HOME}/.agent/.secret-key)
+	fi
+fi
 /usr/sbin/citus/$1
