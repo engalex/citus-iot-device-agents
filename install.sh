@@ -5,7 +5,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[1;34m'
 NC='\033[0m' # No Color
 
-echo -e "${BLUE}INFO: Installing agents....${NC}"
+echo -e "${BLUE}INFO: Installing citus-device agents....${NC}"
 cp -r citus/ /usr/sbin/
 cp citus-device /usr/sbin/
 chmod +x /usr/sbin/citus-device
