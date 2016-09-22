@@ -28,7 +28,9 @@ else
 			RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['device']['status']")
 			echo "${RESULT}" >> ${LOCK_STATE}
 		fi
-	else		
+	elif [ "${DEVICE_STATUS}" == "registered" ]; then
 		echo "The DeviceID: ${DEVICE_ID} has already used on another device! Please pickup another one and try again."
+	else
+		echo "Invalid DEVICE_ID or SECRET_KEY parameter!"
 	fi
 fi
