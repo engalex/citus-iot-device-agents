@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 echo "Installing agents...."
 cp -r citus/ /usr/sbin/
 cp citus-device /usr/sbin/
