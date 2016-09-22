@@ -1,20 +1,22 @@
 #!/bin/bash
 RED='\033[0;31m'
 GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[1;34m'
 NC='\033[0m' # No Color
 export PYTHONIOENCODING=utf8
 LOCK_STATE=$HOME/.agent/.lock-state
 if [ -f $LOCK_STATE ];
 then
-	echo "Checking for Software Update - ID:${DEVICE_ID}"
+	echo -e "${BLUE}INFO: Checking for Software Update - ID:${DEVICE_ID}${NC}"
 	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
 	
 	SOFTWARE_IMG=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['software']" 2> /dev/null)
 	HAS_UPDATED=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['updated']" 2> /dev/null)
 	
 	if [ "${HAS_UPDATED}" == "False" ]; then
-		echo "Updating the software image: ${SOFTWARE_IMG}"
+		echo -e "${BLUE}INFO: Updating the software image: ${SOFTWARE_IMG}${NC}"
 		curl -H "Content-Type: application/json" -X POST -d '{"updated":true}' -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY}
-		echo "The device ${DEVICE_ID} is up-to-date."
+		echo -e "${BLUE}INFO: The device ${DEVICE_ID} is up-to-date.${NC}"
 	fi
 fi

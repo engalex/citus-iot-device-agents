@@ -1,12 +1,14 @@
 #!/bin/bash
 RED='\033[0;31m'
 GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[1;34m'
 NC='\033[0m' # No Color
 export PYTHONIOENCODING=utf8
 LOCK_STATE=$HOME/.agent/.lock-state
 if [ -f $LOCK_STATE ];
 then
-   	echo "INFO: Removing device ${DEVICE_ID}..."
+   	echo "${BLUE}INFO: Removing device ${DEVICE_ID}...${NC}"
    	citus-device revoke
    	rm -rf $HOME/.agent/   	
    	echo -e "${GREEN}============================="
