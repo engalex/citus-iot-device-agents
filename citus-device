@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 if [ -z "${DEVICE_ID}" ]; then
 	if [ -f "${HOME}/.agent/.device-id" ]; then
 		export DEVICE_ID=$(cat ${HOME}/.agent/.device-id)
