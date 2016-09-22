@@ -27,6 +27,10 @@ else
 			curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 			RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['device']['status']")
 			echo "${RESULT}" >> ${LOCK_STATE}
+			echo "==============================="
+			echo "| ACTIVATION DONE: ${RESULT} |"
+			echo "==============================="
+			echo "Try 'citus-device install-sdk' to start writing your code."
 		fi
 	elif [ "${DEVICE_STATUS}" == "registered" ]; then
 		echo "The DeviceID: ${DEVICE_ID} has already used on another device! Please pickup another one and try again."
