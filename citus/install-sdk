@@ -6,7 +6,7 @@ NC='\033[0m' # No Color
 echo -e "INFO: Installing NodeJS 6.x..."
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt install -y nodejs
-echo "Installing Citus IoT Device SDK..."
+echo -e "INFO: Installing Citus IoT Device SDK..."
 https://github.com/cuongquay/citus-iot-sdk-nodejs.git $HOME/citus-iot-sdk-nodejs/
 cd $HOME/citus-iot-sdk-nodejs/ && npm install && npm update
 echo -e "${GREEN}==============================="
