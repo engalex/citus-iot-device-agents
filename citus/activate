@@ -36,8 +36,8 @@ else
 			echo "Try 'citus-device install-sdk' to start writing your code."
 		fi
 	elif [ "${DEVICE_STATUS}" == "registered" ]; then
-		echo "The DeviceID: ${DEVICE_ID} has already used on another device! Please pickup another one and try again."
+		echo "${RED}The DeviceID: ${DEVICE_ID} has already used on another device! Please pickup another one and try again.${NC}"
 	else
-		echo "Invalid DEVICE_ID or SECRET_KEY parameter!"
+		echo "${RED}Invalid DEVICE_ID or SECRET_KEY parameter!${NC}"
 	fi
 fi
