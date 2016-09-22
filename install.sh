@@ -13,7 +13,7 @@ chmod +x /usr/sbin/citus/*
 
 echo -e "${BLUE}INFO: Installing docker engine...${NC}"
 curl -sSL https://get.docker.com | sh
-echo $(docker -v)
+echo -e "${YELLOW}$(docker -v)${NC}"
 echo -e "${GREEN}=================================
 echo -e | INFO: Installed successfully. |
 echo -e =================================${NC}"
