@@ -16,6 +16,6 @@ if [ -z "$(docker -v | grep 'version')" ]; then
 	curl -sSL https://get.docker.com | sh
 	echo -e "${YELLOW}$(docker -v)${NC}"
 fi
-echo -e "${GREEN}================================="
-echo -e "| INFO: Installed successfully. |"
-echo -e "=================================${NC}"
+echo -e "${GREEN}==========================="
+echo -e "| Installed successfully. |"
+echo -e "===========================${NC}"
