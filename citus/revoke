@@ -4,6 +4,8 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[1;34m'
 NC='\033[1;30m' # No Color
+DEF='\033[0m' # Default Color
+
 LOCK_STATE=$HOME/.agent/.lock-state
 if [ -f $LOCK_STATE ];
 then   	
@@ -23,3 +25,4 @@ then
 		echo -e "${RED}ERROR: The DeviceID ${DEVICE_ID} has already used on another device! Please pickup another one and try again.${NC}"
 	fi
 fi
+echo -e "${DEF}"
