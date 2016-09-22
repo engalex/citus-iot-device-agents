@@ -9,9 +9,9 @@ then
    	echo "Removing device ${DEVICE_ID}..."
    	citus-device revoke
    	rm -rf $HOME/.agent/   	
-   	echo "${GREEN}============================="
-   	echo "| The Device is CLEANED UP. |"
-   	echo "=============================${NC}"
+   	echo -e "${GREEN}============================="
+   	echo -e "| The Device is CLEANED UP. |"
+   	echo -e "=============================${NC}"
 else
-	echo "This device is not installed yet."
+	echo -e "${RED}This device is not installed yet.${NC}"
 fi
