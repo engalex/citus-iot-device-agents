@@ -1,5 +1,8 @@
 #!/bin/bash
 export PYTHONIOENCODING=utf8
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
 LOCK_STATE=$HOME/.agent/.lock-state
 if [ -f $LOCK_STATE ];
 then
@@ -14,9 +17,9 @@ else
 	if [ "${DEVICE_STATUS}" == "unregistered" ]; then
 		PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/initialization?secret_key=${SECRET_KEY})	
 		PINCODE=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['pincode']")
-		echo "========================="
+		echo "${RED}========================="
 		echo "| ACTIVATION CODE: ${PINCODE} |"
-		echo "========================="
+		echo "=========================${NC}"
 		if [ "${SELF_ACTIVATION}" == "YES" ]; then
 			PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'","pincode":"'"${PINCODE}"'"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/registration?secret_key=${SECRET_KEY})
 			mkdir -p $HOME/.agent/certs/
@@ -27,9 +30,9 @@ else
 			curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 			RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['device']['status']")
 			echo "${RESULT}" >> ${LOCK_STATE}
-			echo "==============================="
+			echo "${GREEN}==============================="
 			echo "| ACTIVATION DONE: ${RESULT} |"
-			echo "==============================="
+			echo "===============================${NC}"
 			echo "Try 'citus-device install-sdk' to start writing your code."
 		fi
 	elif [ "${DEVICE_STATUS}" == "registered" ]; then

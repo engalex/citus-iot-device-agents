@@ -1,4 +1,7 @@
 #!/bin/bash
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
 LOCK_STATE=$HOME/.agent/.lock-state
 if [ -f $LOCK_STATE ];
 then   	
@@ -11,7 +14,9 @@ then
 	if [ "${DEVICE_STATUS}" == "registered" ]; then
 		PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/revocation?secret_key=${SECRET_KEY})		
 		NEW_STATUS=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['status']")
-		echo "Revoked Status: ${NEW_STATUS}"
+		echo "${GREEN}======================================"
+		echo "| REVOKED SUCCESSFULLY: ${NEW_STATUS} |"
+		echo "======================================${NC}"
 	else		
 		echo "The DeviceID: ${DEVICE_ID} has already used on another device! Please pickup another one and try again."
 	fi
