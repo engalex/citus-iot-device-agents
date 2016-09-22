@@ -3,7 +3,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
-echo "Installing NodeJS 6.x..."
+echo -e "INFO: Installing NodeJS 6.x..."
 curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
 sudo apt install -y nodejs
 echo "Installing Citus IoT Device SDK..."
@@ -12,4 +12,4 @@ cd $HOME/citus-iot-sdk-nodejs/ && npm install && npm update
 echo -e "${GREEN}==============================="
 echo -e "| Installed SDK successfully! |"
 echo -e "===============================${NC}"
-echo -e "Try 'npm run test' to test your connection."
+echo -e "INFO: Try 'npm run test' to test your connection."

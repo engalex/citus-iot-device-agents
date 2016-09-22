@@ -6,12 +6,12 @@ export PYTHONIOENCODING=utf8
 LOCK_STATE=$HOME/.agent/.lock-state
 if [ -f $LOCK_STATE ];
 then
-   	echo "Removing device ${DEVICE_ID}..."
+   	echo "INFO: Removing device ${DEVICE_ID}..."
    	citus-device revoke
    	rm -rf $HOME/.agent/   	
    	echo -e "${GREEN}============================="
    	echo -e "| The Device is CLEANED UP. |"
    	echo -e "=============================${NC}"
 else
-	echo -e "${RED}This device is not installed yet.${NC}"
+	echo -e "${RED}ERROR: This device is not installed yet.${NC}"
 fi

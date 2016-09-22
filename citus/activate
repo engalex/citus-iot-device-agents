@@ -2,13 +2,14 @@
 export PYTHONIOENCODING=utf8
 RED='\033[0;31m'
 GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 LOCK_STATE=$HOME/.agent/.lock-state
 if [ -f $LOCK_STATE ];
 then
-   	echo "The device ${DEVICE_ID} has already installed successfully."
+   	echo -e "INFO: The device ${DEVICE_ID} has already installed successfully."
 else	
-	echo "Activating the device with ID:${DEVICE_ID}"
+	echo -e "INFO: Activating the device with ID:${DEVICE_ID}"
 	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
 	
 	DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']" 2> /dev/null)
@@ -23,20 +24,28 @@ else
 		if [ "${SELF_ACTIVATION}" == "YES" ]; then
 			PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'","pincode":"'"${PINCODE}"'"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/registration?secret_key=${SECRET_KEY})
 			mkdir -p $HOME/.agent/certs/
-			RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['certificatePem']" 2> /dev/null)	
-			echo "${RESULT}" >> "$HOME/.agent/certs/${DEVICE_ID}-certificate.pem.crt"
-			RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['keyPair']['PrivateKey']" 2> /dev/null)	
-			echo "${RESULT}" >> "$HOME/.agent/certs/${DEVICE_ID}-private-pem.key"
-			curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
-			RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['device']['status']" 2> /dev/null)
-			echo "${RESULT}" >> ${LOCK_STATE}
-			echo -e "${GREEN}==============================="
-			echo -e "| ACTIVATION DONE: ${RESULT} |"
-			echo -e "===============================${NC}"
-			echo "Try 'citus-device install-sdk' to start writing your code."
+			RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['certificatePem']" 2> /dev/null)
+			if [ -z "${RESULT}"]; then	
+				echo "${RESULT}" >> "$HOME/.agent/certs/${DEVICE_ID}-certificate.pem.crt"
+				RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['keyPair']['PrivateKey']" 2> /dev/null)	
+				echo "${RESULT}" >> "$HOME/.agent/certs/${DEVICE_ID}-private-pem.key"
+				curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
+				RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['device']['status']" 2> /dev/null)
+				if [ "${RESULT}" == "registered" ]; then
+					echo "${RESULT}" >> ${LOCK_STATE}
+					echo -e "${GREEN}==============================="
+					echo -e "| ACTIVATION DONE: ${RESULT} |"
+					echo -e "===============================${NC}"
+					echo "Try 'citus-device install-sdk' to start writing your code."
+				else
+					echo -e "${RED}ERROR: Device is not activated!${NC}"
+				fi
+			else 
+				echo -e "${RED}ERROR: No certificates bundle found!${NC}"
+			fi
 		fi
 	elif [ "${DEVICE_STATUS}" == "registered" ]; then
-		echo -e "${RED}The DeviceID: ${DEVICE_ID} has already used on another device! Please pickup another one and try again.${NC}"
+		echo -e "${YELLOW}WARN: The DeviceID: ${DEVICE_ID} has already used on another device! Please pickup another one and try again.${NC}"
 	else
 		echo -e "${RED}ERROR: ${DEVICE_OBJECT}${NC}"
 	fi
