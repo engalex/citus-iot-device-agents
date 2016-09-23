@@ -19,7 +19,11 @@ then
 	if [ "${HAS_UPDATED}" == "False" ]; then
 		echo -e "${BLUE}INFO: Updating the software image: ${SOFTWARE_IMG}${NC}"
 		curl -H "Content-Type: application/json" -X POST -d '{"updated":true}' -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY}
-		echo -e "${BLUE}INFO: The device ${DEVICE_ID} is up-to-date.${NC}"
+		echo -e "${GREEN}INFO: The device ${DEVICE_ID} is up-to-date.${NC}"
+	else
+		echo -e "${GREEN}INFO: The software has already updated yet..${NC}"	
 	fi
-fi
+else
+	echo -e "${YELLOW}WARN: The software is not activated yet.${NC}"	
+fi	
 echo -e "${DEF}"
