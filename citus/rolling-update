@@ -10,9 +10,9 @@ SOFTWARE_IMAGE=${1:-"hello-world"}
 SERVICE_NAME=${2:-"hello-world-service"}
 PARAMETERS=${3:-}
 
-docker stop $(docker ps -aqf "${SERVICE_NAME}") && sleep 1
-docker rm $(docker ps -aqf "name=${SERVICE_NAME}") && sleep 1
-service docker restart && sleep 1
-docker rmi $(docker images -q)
+#docker stop $(docker ps -aqf "${SERVICE_NAME}") && sleep 1
+#docker rm $(docker ps -aqf "name=${SERVICE_NAME}") && sleep 1
+#service docker restart && sleep 1
+#docker rmi $(docker images -q)
 docker pull ${SOFTWARE_IMAGE} && sleep 1
 docker run ${PARAMETERS} --name ${SERVICE_NAME} ${SOFTWARE_IMAGE}
