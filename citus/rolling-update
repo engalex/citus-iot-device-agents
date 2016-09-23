@@ -18,5 +18,5 @@ docker rmi $(docker images -q)
 echo -e "${BLUE}Fetching new image ${SOFTWARE_IMAGE}...${NC}"
 docker pull ${SOFTWARE_IMAGE} && sleep 1
 echo -e "${BLUE}Run new image ${SOFTWARE_IMAGE} as ${SERVICE_NAME}...${NC}"
-docker run ${PARAMETERS} --name ${SERVICE_NAME} ${SOFTWARE_IMAGE}
+docker run ${PARAMETERS} --name "${SERVICE_NAME}" "${SOFTWARE_IMAGE}"
 echo -e "${DEF}"
