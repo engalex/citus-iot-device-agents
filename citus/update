@@ -24,6 +24,6 @@ then
 		echo -e "${GREEN}INFO: The software has already updated yet..${NC}"	
 	fi
 else
-	echo -e "${YELLOW}WARN: The software is not activated yet.${NC}"	
+	echo -e "${YELLOW}WARN: The device ${DEVICE_ID} is not activated yet.${NC}"	
 fi	
 echo -e "${DEF}"
