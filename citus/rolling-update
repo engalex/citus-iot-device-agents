@@ -14,6 +14,7 @@ echo -e "${BLUE}Stopping the existing docker containers...${NC}"
 docker stop $(docker ps -aqf "name=${SERVICE_NAME}") && sleep 1
 echo -e "${BLUE}Removing the existing docker containers...${NC}"
 docker rm $(docker ps -aqf "name=${SERVICE_NAME}") && sleep 1
+echo -e "${BLUE}Restarting docker service to make it stable...${NC}"
 service docker restart && sleep 1
 echo -e "${BLUE}Cleanup the existing docker local repository...${NC}"
 docker rmi $(docker images -q)
