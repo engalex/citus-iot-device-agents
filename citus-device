@@ -9,4 +9,4 @@ if [ -z "${SECRET_KEY}" ]; then
 		export SECRET_KEY=$(cat ${HOME}/.agent/.secret-key)
 	fi
 fi
-/usr/sbin/citus/$1
+/usr/sbin/citus/$@
