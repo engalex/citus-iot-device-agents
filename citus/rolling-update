@@ -10,16 +10,16 @@ SOFTWARE_IMAGE=${1:-"hello-world"}
 SERVICE_NAME=${2:-"hello-world-service"}
 PARAMETERS=${3:-}
 
-echo -e "${BLUE}Stopping the existing docker containers...${NC}"
+echo -e "${BLUE}INFO: Stopping the existing docker containers...${NC}"
 docker stop $(docker ps -aqf "name=${SERVICE_NAME}") && sleep 1
-echo -e "${BLUE}Removing the existing docker containers...${NC}"
+echo -e "${BLUE}INFO: Removing the existing docker containers...${NC}"
 docker rm $(docker ps -aqf "name=${SERVICE_NAME}") && sleep 1
-echo -e "${BLUE}Restarting docker service to make it stable...${NC}"
+echo -e "${BLUE}INFO: Restarting docker service to make it stable...${NC}"
 service docker restart && sleep 1
-echo -e "${BLUE}Cleanup the existing docker local repository...${NC}"
+echo -e "${BLUE}INFO: Cleanup the existing docker local repository...${NC}"
 docker rmi $(docker images -q)
-echo -e "${BLUE}Fetching new image ${SOFTWARE_IMAGE}...${NC}"
+echo -e "${BLUE}INFO: Fetching new image ${SOFTWARE_IMAGE}...${NC}"
 docker pull ${SOFTWARE_IMAGE} && sleep 1
-echo -e "${BLUE}Run new image ${SOFTWARE_IMAGE} as ${SERVICE_NAME}...${NC}"
+echo -e "${BLUE}INFO: Run new image ${SOFTWARE_IMAGE} as ${SERVICE_NAME}...${NC}"
 docker run -d ${PARAMETERS} --name "${SERVICE_NAME}" "${SOFTWARE_IMAGE}"
 echo -e "${DEF}"
