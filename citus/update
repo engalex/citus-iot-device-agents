@@ -11,15 +11,16 @@ LOCK_STATE=$HOME/.agent/.lock-state
 if [ -f $LOCK_STATE ];
 then
 	echo -e "${BLUE}INFO: Checking for Software Update - ID:${DEVICE_ID}${NC}"
-	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
-	
+	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})	
+
+	DEVICE_OWNER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['owner']" 2> /dev/null)
 	SOFTWARE_SCRIPT=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['software']" 2> /dev/null)
 	HAS_UPDATED=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['updated']" 2> /dev/null)
 	
 	if [ "${HAS_UPDATED}" == "False" ]; then
 		echo -e "${BLUE}INFO: Updating the software: ${SOFTWARE_SCRIPT}${NC}"
 		sh -c "${SOFTWARE_SCRIPT}"
-		curl -H "Content-Type: application/json" -X POST -d '{"updated":true}' -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY}
+		curl -H "Content-Type: application/json" -X POST -d '{"name":"${DEVICE_ID}","owner":"${DEVICE_OWNER}","_metadata":{"updated":true}}' -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY}
 		echo -e "${GREEN}INFO: The device ${DEVICE_ID} is up-to-date.${NC}"
 	else
 		echo -e "${GREEN}INFO: The software has already updated yet..${NC}"	
