@@ -16,7 +16,7 @@ then
 	DEVICE_OWNER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['owner']" 2> /dev/null)
 	SOFTWARE_SCRIPT=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['software']" 2> /dev/null)
 	HAS_UPDATED=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['updated']" 2> /dev/null)
-	
+	echo ${HAS_UPDATED}
 	if [ "${HAS_UPDATED}" == "False" ]; then
 		echo -e "${BLUE}INFO: Updating the software: ${SOFTWARE_SCRIPT}${NC}"
 		sh -c "${SOFTWARE_SCRIPT}"
