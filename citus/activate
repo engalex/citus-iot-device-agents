@@ -28,7 +28,7 @@ else
 			PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'","pincode":"'"${PINCODE}"'"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/registration?secret_key=${SECRET_KEY})
 			mkdir -p $HOME/.agent/certs/
 			RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['certificatePem']" 2> /dev/null)
-			if [ -z "${RESULT}"]; then	
+			if [ -n "${RESULT}"]; then	
 				echo "${RESULT}" >> "$HOME/.agent/certs/${DEVICE_ID}-certificate.pem.crt"
 				RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['keyPair']['PrivateKey']" 2> /dev/null)	
 				echo "${RESULT}" >> "$HOME/.agent/certs/${DEVICE_ID}-private-pem.key"
