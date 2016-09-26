@@ -20,7 +20,7 @@ then
 	if [ "${HAS_UPDATED}" == "False" ]; then
 		echo -e "${BLUE}INFO: Updating the software: ${SOFTWARE_SCRIPT}${NC}"
 		sh -c "${SOFTWARE_SCRIPT}"
-		curl -H "Content-Type: application/json" -X PUT -d '{"name":"${DEVICE_ID}","owner":"${DEVICE_OWNER}","_metadata":{"updated":true}}' -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY} 2> /dev/null
+		RESULT=$(echo curl -H "Content-Type: application/json" -X PUT -d '{"name":"${DEVICE_ID}","owner":"${DEVICE_OWNER}","_metadata":{"updated":true}}' -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY} 2> /dev/null)
 		echo -e "${GREEN}INFO: The device ${DEVICE_ID} is up-to-date.${NC}"
 	else
 		echo -e "${GREEN}INFO: The software has already updated yet..${NC}"	
