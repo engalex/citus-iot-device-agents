@@ -12,7 +12,7 @@ cp citus-device /usr/sbin/
 chmod +x /usr/sbin/citus-device
 chmod +x /usr/sbin/citus/*
 
-if [ -z "$(docker -v | grep 'version')" ]; then
+if [ "${INSTALL_DOCKER}" == "YES" ]; then
 	echo -e "${BLUE}INFO: Installing docker engine...${NC}"
 	curl -sSL https://get.docker.com | sh
 	echo -e "${YELLOW}$(docker -v)${NC}"
