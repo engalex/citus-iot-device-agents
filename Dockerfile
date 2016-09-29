@@ -3,8 +3,6 @@ MAINTAINER DUONG Dinh Cuong <cuong3ihut@gmail.com>
 
 COPY . /data
 WORKDIR /data
-RUN mkdir -p /usr/local/.node-red
-VOLUME  /usr/local/.node-red
 
 ENV DEVICE_ID= SECRET_KEY= SELF_ACTIVATION=NO INSTALL_DOCKER=NO
 
