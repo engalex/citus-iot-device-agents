@@ -1,4 +1,4 @@
-FROM mhart/alpine-python
+FROM alpine
 MAINTAINER DUONG Dinh Cuong <cuong3ihut@gmail.com>
 
 COPY . /data
@@ -10,7 +10,7 @@ ENV DEVICE_ID= SECRET_KEY= SELF_ACTIVATION=NO INSTALL_DOCKER=NO
 RUN echo '{ "allow_root": true }'>.bowerrc
 
 # node-sass doesn't support Alpine, so we need the build toolchain.
-RUN apk --update add curl git ca-certificates &&\	
+RUN apk --update add curl git ca-certificates python build-base &&\	
     rm -rf /var/lib/apt/lists/* &&\
     rm -rf /var/cache/apk/* &&\
     rm -rf /data
