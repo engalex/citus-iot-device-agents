@@ -19,7 +19,7 @@ then
 	echo -e "${BLUE}INFO: Software Update Status - ${HAS_UPDATED}.${NC}"
 	if [ "${HAS_UPDATED}" == "False" ]; then
 		echo -e "${YELLOW}INFO: Executing software script: ${SOFTWARE_SCRIPT}${NC}"
-		sh -c "${SOFTWARE_SCRIPT}" | tee ; ( exit ${PIPESTATUS[0]} ); 
+		sh -c "${SOFTWARE_SCRIPT}" | tee ; ( exit ${PIPESTATUS} ); 
 		RETCODE=$(echo "$?")
 		if [ "${RETCODE}" == 0 ]; then
 			RESULT=$(curl -H "Content-Type: application/json" -X PUT -d '{"name":"'"${DEVICE_ID}"'","owner":"'"${DEVICE_OWNER}"'","_metadata":{"updated":true}}' -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY})

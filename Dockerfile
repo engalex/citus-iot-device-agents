@@ -16,5 +16,4 @@ RUN apk --update add curl git ca-certificates python build-base &&\
     rm -rf /data
 
 ENTRYPOINT ["/bin/sh"]
-CMD ["pwd"]
 
