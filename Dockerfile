@@ -17,7 +17,6 @@ RUN apk --update add curl git ca-certificates python build-base &&\
     rm -rf /var/cache/apk/* &&\
     rm -rf /data
 
-EXPOSE 1880
-ENTRYPOINT ["node"]
-CMD ["/usr/bin/node-red"]
+ENTRYPOINT ["/bin/sh"]
+CMD ["pwd"]
 
