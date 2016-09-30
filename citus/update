@@ -12,11 +12,13 @@ if [ -f $LOCK_STATE ];
 then
 	echo -e "${BLUE}INFO: Checking for Software Update - ID:${DEVICE_ID}${NC}"
 	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})	
-
+	
+	SERIAL_NUMBER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']" 2> /dev/null)
 	DEVICE_OWNER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['owner']" 2> /dev/null)
 	SOFTWARE_SCRIPT=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['software']" 2> /dev/null)
-	HAS_UPDATED=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['updated']" 2> /dev/null)
-	echo -e "${BLUE}INFO: Software Update Status - ${HAS_UPDATED}.${NC}"
+	HAS_UPDATED=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['updated']" 2> /dev/null)	
+	
+	echo -e "${BLUE}INFO: Software Update Status ${SERIAL_NUMBER} - ${HAS_UPDATED}.${NC}"
 	if [ "${HAS_UPDATED}" == "False" ]; then
 		echo -e "${YELLOW}INFO: Executing software script: ${SOFTWARE_SCRIPT}${NC}"
 		sh -c "${SOFTWARE_SCRIPT}" | tee ; ( exit ${PIPESTATUS} ); 
@@ -29,7 +31,7 @@ then
 			echo -e "${RED}ERROR: Can't update this device due to an unexpected error.${NC}"
 		fi
 	else
-		echo -e "${GREEN}INFO: The software has already updated yet.${NC}"	
+		echo -e "${GREEN}INFO: The software ${SERIAL_NUMBER} has already updated yet.${NC}"	
 	fi
 else
 	echo -e "${YELLOW}WARN: The device ${DEVICE_ID} is not activated yet.${NC}"	
