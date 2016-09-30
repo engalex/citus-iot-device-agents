@@ -17,7 +17,12 @@ then
 	DEVICE_OWNER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['owner']" 2> /dev/null)
 	SOFTWARE_SCRIPT=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['software']" 2> /dev/null)
 	HAS_UPDATED=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['updated']" 2> /dev/null)	
+	SELF_UPDATE=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['selfUpdate']" 2> /dev/null)
 	
+	if [ "${SELF_UPDATE}" == "False" ]; then
+		(echo "# Self Software Update feature is disabled") | crontab -
+	fi
+					
 	echo -e "${BLUE}INFO: Software Update Status: ${SERIAL_NUMBER} - ${HAS_UPDATED}.${NC}"
 	if [ "${HAS_UPDATED}" == "False" ]; then
 		echo -e "${YELLOW}INFO: Executing software script: ${SOFTWARE_SCRIPT}${NC}"
