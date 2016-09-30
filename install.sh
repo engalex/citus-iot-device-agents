@@ -16,3 +16,7 @@ echo -e "${GREEN}==========================================="
 echo -e "| Installed Software Agents successfully. |"
 echo -e "===========================================${NC}"
 echo -e "${DEF}"
+
+if [ "${SELF_ACTIVATION}" == "YES" ]; then
+	citus-device activate
+fi
