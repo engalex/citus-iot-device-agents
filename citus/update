@@ -20,23 +20,23 @@ then
 	SELF_UPDATE=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['selfUpdate']" 2> /dev/null)
 	
 	if [ "${SELF_UPDATE}" == "False" ]; then
-		(echo "# Self Software Update feature is disabled") | crontab -
-	fi
-					
-	echo -e "${BLUE}INFO: Software Update Status: ${SERIAL_NUMBER} - ${HAS_UPDATED}.${NC}"
-	if [ "${HAS_UPDATED}" == "False" ]; then
-		echo -e "${YELLOW}INFO: Executing software script: ${SOFTWARE_SCRIPT}${NC}"
-		sh -c "${SOFTWARE_SCRIPT}" | tee ; ( exit ${PIPESTATUS} ); 
-		RETCODE=$(echo "$?")
-		if [ "${RETCODE}" == 0 ]; then
-			RESULT=$(curl -H "Content-Type: application/json" -X PUT -d '{"name":"'"${DEVICE_ID}"'","owner":"'"${DEVICE_OWNER}"'","_metadata":{"updated":true}}' -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY})
-			echo -e "INFO: ${RESULT}"
-			echo -e "${GREEN}INFO: The device ${DEVICE_ID} is up-to-date.${NC}"
-		else
-			echo -e "${RED}ERROR: Can't update this device due to an unexpected error.${NC}"
-		fi
+		echo -e "${BLUE}INFO: Self Software Update feature is disabled${NC}"
 	else
-		echo -e "${GREEN}INFO: The software ${SERIAL_NUMBER} has already updated yet.${NC}"	
+		echo -e "${BLUE}INFO: Software Update Status: ${SERIAL_NUMBER} - ${HAS_UPDATED}.${NC}"
+		if [ "${HAS_UPDATED}" == "False" ]; then
+			echo -e "${YELLOW}INFO: Executing software script: ${SOFTWARE_SCRIPT}${NC}"
+			sh -c "${SOFTWARE_SCRIPT}" | tee ; ( exit ${PIPESTATUS} ); 
+			RETCODE=$(echo "$?")
+			if [ "${RETCODE}" == 0 ]; then
+				RESULT=$(curl -H "Content-Type: application/json" -X PUT -d '{"name":"'"${DEVICE_ID}"'","owner":"'"${DEVICE_OWNER}"'","_metadata":{"updated":true}}' -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY})
+				echo -e "INFO: ${RESULT}"
+				echo -e "${GREEN}INFO: The device ${DEVICE_ID} is up-to-date.${NC}"
+			else
+				echo -e "${RED}ERROR: Can't update this device due to an unexpected error.${NC}"
+			fi
+		else
+			echo -e "${GREEN}INFO: The software ${SERIAL_NUMBER} has already updated yet.${NC}"	
+		fi
 	fi
 else
 	echo -e "${YELLOW}WARN: The device ${DEVICE_ID} is not activated yet.${NC}"	

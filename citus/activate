@@ -16,8 +16,7 @@ else
 	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
 	
 	DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']" 2> /dev/null)
-	SERIAL_NUMBER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']" 2> /dev/null)
-	SELF_UPDATE=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['selfUpdate']" 2> /dev/null)	
+	SERIAL_NUMBER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']" 2> /dev/null)	
 	
 	if [ "${DEVICE_STATUS}" == "unregistered" ]; then
 		PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/initialization?secret_key=${SECRET_KEY})	
@@ -41,9 +40,7 @@ else
 					echo -e "| ACTIVATION DONE: ${RESULT} |"
 					echo -e "===============================${NC}"
 					echo "Try 'citus-device install-sdk' to start writing your code."
-					if [ "${SELF_UPDATE}" == "True" ]; then
-						(echo "* * * * * /usr/sbin/citus-device update >$HOME/.agent/update.log ") | crontab -
-					fi
+					(echo "* * * * * /usr/sbin/citus-device update >$HOME/.agent/update.log ") | crontab -
 				else
 					echo -e "${RED}ERROR: Device is not activated!${NC}"
 				fi
