@@ -16,5 +16,5 @@ RUN apk --update add curl git ca-certificates python build-base &&\
     rm -rf /var/cache/apk/* &&\
     rm -rf /data
 
-CMD ['crond', '&&', 'tail -f /root/.agent/update.log']
+CMD crond && tail -f /root/.agent/update.log
 
