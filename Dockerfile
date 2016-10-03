@@ -8,6 +8,7 @@ ENV DEVICE_ID= SECRET_KEY= SELF_ACTIVATION=NO INSTALL_DOCKER=NO
 
 # bower requires this configuration parameter to allow bower install using root.
 RUN echo '{ "allow_root": true }'>.bowerrc
+RUN mkdir -p /root/.agent/ && touch /root/.agent/update.log
 
 # node-sass doesn't support Alpine, so we need the build toolchain.
 RUN apk --update add curl git ca-certificates python build-base &&\	
@@ -15,5 +16,5 @@ RUN apk --update add curl git ca-certificates python build-base &&\
     rm -rf /var/cache/apk/* &&\
     rm -rf /data
 
-ENTRYPOINT ["/bin/sh"]
+CMD ['crond', '&&', 'tail -f /root/.agent/update.log']
 
