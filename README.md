@@ -1,2 +1,2 @@
 # citus-iot-device-agents
-The IoT Device agents source code for Citus IoT Ecosystem
+The Citus™ IoT Device Agent source code which is used to activate a device to be ready communicating with IoT Platform in Citus™ IoT Ecosystem.
