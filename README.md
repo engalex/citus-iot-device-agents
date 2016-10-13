@@ -5,3 +5,11 @@ The Citus™ IoT Device Agent source code which is used to activate a device to 
 
 ![Citus IoT](https://raw.githubusercontent.com/cuongquay/citus-iot-device-agents/master/docs/images/citus-iot-ecosystem.png)
 
+Features
+========
+1. Device Setup
+2. Device Activation
+3. Device Software Update
+4. Device Revocation
+5. Device Cleanup
+
