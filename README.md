@@ -13,3 +13,9 @@ Features
 4. Device Revocation
 5. Device Cleanup
 
+Test /w Docker Environment
+==========================
+
+1. Install Docker Tool Box from https://www.docker.com/products/docker-toolbox
+2. Launch Kitematic, choose **citus-iot-device-agents** container and open **exec** window
+3. Try some commands: citus-device active [citus-device update | citus-device revoke | citus-device remove] 
