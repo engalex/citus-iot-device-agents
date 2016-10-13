@@ -13,8 +13,8 @@ Features
 4. Device Revocation
 5. Device Cleanup
 
-Test /w Docker Environment
-==========================
+Test /w Docker
+==============
 
 1. Install Docker Tool Box from https://www.docker.com/products/docker-toolbox.
 2. Launch Kitematic, choose **citus-iot-device-agents** container and open **exec** window.
