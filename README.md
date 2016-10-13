@@ -16,6 +16,8 @@ Features
 Test /w Docker Environment
 ==========================
 
-1. Install Docker Tool Box from https://www.docker.com/products/docker-toolbox
-2. Launch Kitematic, choose **citus-iot-device-agents** container and open **exec** window
-3. Try some commands: citus-device active [citus-device update | citus-device revoke | citus-device remove] 
+1. Install Docker Tool Box from https://www.docker.com/products/docker-toolbox.
+2. Launch Kitematic, choose **citus-iot-device-agents** container and open **exec** window.
+3. On Citus™ IoT Platform (https://apps.citus.io): go to [Connected Things] menu, create a device then [Activate].
+4. Pickup the installation shell script from the left section box on [ACTIVATE YOUR DEVICE] tab.
+5. Try some commands: citus-device active [citus-device update | citus-device revoke | citus-device remove].
