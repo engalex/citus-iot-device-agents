@@ -21,3 +21,6 @@ Test /w Docker
 3. On Citus™ IoT Platform (https://apps.citus.io): go to [Connected Things] menu, create a device then [Activate].
 4. Pickup the installation shell script from the left section box on [ACTIVATE YOUR DEVICE] tab.
 5. Try some commands: citus-device active [citus-device update | citus-device revoke | citus-device remove].
+
+
+<div class="LI-profile-badge"  data-version="v1" data-size="medium" data-locale="en_US" data-type="vertical" data-theme="dark" data-vanity="cuongquay"><a class="LI-simple-link" href='https://vn.linkedin.com/in/cuongquay?trk=profile-badge'>DUONG Dinh Cuong</a></div>
