@@ -18,6 +18,7 @@ then
 	if [ "${DEVICE_STATUS}" == "registered" ]; then
 		PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/revocation?secret_key=${SECRET_KEY})		
 		NEW_STATUS=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['status']" 2> /dev/null)
+		echo "${NEW_STATUS}" >> ${LOCK_STATE}
 		echo -e "${GREEN}======================================"
 		echo -e "| REVOKED SUCCESSFULLY: ${NEW_STATUS} |"
 		echo -e "======================================${NC}"
