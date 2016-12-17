@@ -13,19 +13,19 @@ then
    	echo -e "${BLUE}INFO: The device ${DEVICE_ID} has already installed successfully.${NC}"
 else	
 	echo -e "${BLUE}INFO: Activating the device with ID:${DEVICE_ID}${NC}"
-	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L https://apps.citus.io/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
+	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
 	
 	DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']" 2> /dev/null)
 	SERIAL_NUMBER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']" 2> /dev/null)	
 	
 	if [ "${DEVICE_STATUS}" == "unregistered" ]; then
-		PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/initialization?secret_key=${SECRET_KEY})	
+		PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'"}' -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/lifecycle/initialization?secret_key=${SECRET_KEY})	
 		PINCODE=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['pincode']" 2> /dev/null)
 		echo -e "${GREEN}========================="
 		echo -e "| ACTIVATION CODE: ${PINCODE} |"
 		echo -e "=========================${NC}"
 		if [ "${SELF_ACTIVATION}" == "YES" ]; then
-			PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'","pincode":"'"${PINCODE}"'"}' -L https://apps.citus.io/apisrv/device-lifecycle-service/lifecycle/registration?secret_key=${SECRET_KEY})
+			PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'","pincode":"'"${PINCODE}"'"}' -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/lifecycle/registration?secret_key=${SECRET_KEY})
 			mkdir -p $HOME/.agent/certs/
 			RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['certificatePem']" 2> /dev/null)
 			if [ -n "${RESULT}" ]; then	
