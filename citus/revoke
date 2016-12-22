@@ -19,9 +19,7 @@ then
 		PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'"}' -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/lifecycle/revocation?secret_key=${SECRET_KEY})		
 		NEW_STATUS=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['status']" 2> /dev/null)
 		echo "${NEW_STATUS}" >> ${LOCK_STATE}
-		echo -e "${GREEN}======================================"
-		echo -e "| REVOKED SUCCESSFULLY: ${NEW_STATUS} |"
-		echo -e "======================================${NC}"
+		echo -e "${BLUE}INFO: Device Status - ${NEW_STATUS}${NC}"		
 	else		
 		echo -e "${RED}ERROR: The device ${DEVICE_ID} has already used on another device! Please pickup another one and try again.${NC}"
 	fi

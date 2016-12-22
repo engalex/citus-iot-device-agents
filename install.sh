@@ -11,10 +11,7 @@ cp -r $HOME/citus-iot-device-agents/citus/ /usr/sbin/
 cp $HOME/citus-iot-device-agents/citus-device /usr/sbin/
 chmod +x /usr/sbin/citus-device
 chmod +x /usr/sbin/citus/*
-
-echo -e "${GREEN}==========================================="
-echo -e "| Installed Software Agents successfully. |"
-echo -e "===========================================${NC}"
+echo -e "${BLUE}INFO: Installed Software Agents successfully.${NC}"
 echo -e "${DEF}"
 
 if [ "${SELF_ACTIVATION}" == "YES" ]; then
