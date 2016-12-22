@@ -13,7 +13,6 @@ if [ -f $LOCK_STATE ];
 then
    	echo -e "${BLUE}INFO: The device ${DEVICE_ID} has already installed successfully.${NC}"
 else	
-	echo -e "${BLUE}INFO: Registering the device ${DEVICE_ID} with PINCODE:${PINCODE}${NC}"
 	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
 	DEVICE_OWNER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['owner']" 2> /dev/null)
 	DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']" 2> /dev/null)
