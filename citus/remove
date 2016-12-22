@@ -12,10 +12,8 @@ if [ -f $LOCK_STATE ];
 then
    	echo "${BLUE}INFO: Removing device ${DEVICE_ID}...${NC}"
    	citus-device revoke
-   	rm -rf $HOME/.agent/   	
-   	echo -e "${GREEN}============================="
-   	echo -e "| The Device is CLEANED UP. |"
-   	echo -e "=============================${NC}"
+   	rm -rf $HOME/.agent/   	   	
+   	echo -e "${BLUE}INFO: The Device is cleanned successfully.${NC}"   	
 else
 	echo -e "${RED}ERROR: This device is not installed yet.${NC}"
 fi
