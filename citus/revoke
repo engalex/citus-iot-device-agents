@@ -9,7 +9,7 @@ DEF='\033[0m' # Default Color
 LOCK_STATE=$HOME/.agent/.lock-state
 if [ -f $LOCK_STATE ];
 then   	
-	echo -e "INFO: Deactivating the device with ID:${DEVICE_ID}"
+	echo -e "INFO: Deactivating the device ${DEVICE_ID}"
 	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
 	
 	DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']" 2> /dev/null)
@@ -23,7 +23,7 @@ then
 		echo -e "| REVOKED SUCCESSFULLY: ${NEW_STATUS} |"
 		echo -e "======================================${NC}"
 	else		
-		echo -e "${RED}ERROR: The DeviceID ${DEVICE_ID} has already used on another device! Please pickup another one and try again.${NC}"
+		echo -e "${RED}ERROR: The device ${DEVICE_ID} has already used on another device! Please pickup another one and try again.${NC}"
 	fi
 fi
 echo -e "${DEF}"
