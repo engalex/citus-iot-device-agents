@@ -22,7 +22,7 @@ else
 		PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'"}' -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/lifecycle/initialization?secret_key=${SECRET_KEY})	
 		PINCODE=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['pincode']" 2> /dev/null)		
 		if [ "${SELF_ACTIVATION}" == "YES" ]; then
-			echo -e "${BLUE}INFO: Registering the device ${DEVICE_ID} with PINCODE:${PINCODE}${NC}"
+			echo -e "${BLUE}INFO: Registering the device with PINCODE:${PINCODE}${NC}"
 			citus-device register ${PINCODE}
 		else
 			echo -e "${GREEN}========================="
