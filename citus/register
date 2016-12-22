@@ -32,7 +32,7 @@ else
 			if [ "${RESULT}" == "registered" ]; then
 				echo "${RESULT}" >> ${LOCK_STATE}
 				echo -e "${GREEN}==============================="
-				echo -e "| ACTIVATION DONE: ${RESULT} |"
+				echo -e "| ACTIVATED: ${RESULT} |"
 				echo -e "===============================${NC}"
 				RESULT=$(curl -H "Content-Type: application/json" -X PUT -d '{"name":"'"${DEVICE_ID}"'","owner":"'"${DEVICE_OWNER}"'","_metadata":{"name":"'"${DEVICE_NAME}"'","type": "Default","location": "Hanoi, Vietnam"}}' -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY})
 				echo "Try 'citus-device install-sdk' to start writing your code."
