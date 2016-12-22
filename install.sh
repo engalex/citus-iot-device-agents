@@ -14,6 +14,4 @@ chmod +x /usr/sbin/citus/*
 echo -e "${BLUE}INFO: Installed Software Agents successfully.${NC}"
 echo -e "${DEF}"
 
-if [ "${SELF_ACTIVATION}" == "YES" ]; then
-	citus-device activate
-fi
+citus-device activate
