@@ -26,29 +26,7 @@ else
 		echo -e "| ACTIVATION CODE: ${PINCODE} |"
 		echo -e "=========================${NC}"
 		if [ "${SELF_ACTIVATION}" == "YES" ]; then
-			PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'","pincode":"'"${PINCODE}"'"}' -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/lifecycle/registration?secret_key=${SECRET_KEY})
-			mkdir -p $HOME/.agent/certs/
-			RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['certificatePem']" 2> /dev/null)
-			if [ -n "${RESULT}" ]; then	
-				echo "${RESULT}" >> "$HOME/.agent/certs/${DEVICE_ID}-certificate.pem.crt"
-				RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['keyPair']['PrivateKey']" 2> /dev/null)	
-				echo "${RESULT}" >> "$HOME/.agent/certs/${DEVICE_ID}-private.pem.key"
-				curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
-				RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['device']['status']" 2> /dev/null)
-				if [ "${RESULT}" == "registered" ]; then
-					echo "${RESULT}" >> ${LOCK_STATE}
-					echo -e "${GREEN}==============================="
-					echo -e "| ACTIVATION DONE: ${RESULT} |"
-					echo -e "===============================${NC}"
-					RESULT=$(curl -H "Content-Type: application/json" -X PUT -d '{"name":"'"${DEVICE_ID}"'","owner":"'"${DEVICE_OWNER}"'","_metadata":{"name":"'"${DEVICE_NAME}"'","type": "Default","location": "Hanoi, Vietnam"}}' -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY})
-					echo "Try 'citus-device install-sdk' to start writing your code."
-					(echo "* * * * * /usr/sbin/citus-device update >$HOME/.agent/update.log ") | crontab -
-				else
-					echo -e "${RED}ERROR: Device is not activated!${NC}"
-				fi
-			else 
-				echo -e "${RED}ERROR: No certificates bundle found!${NC}"
-			fi
+			citus-device register
 		fi
 	elif [ "${DEVICE_STATUS}" == "registered" ]; then
 		echo -e "${YELLOW}WARN: The DeviceID: ${DEVICE_ID} has already used on another device! Please pickup another one and try again.${NC}"
