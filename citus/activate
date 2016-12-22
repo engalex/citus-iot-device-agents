@@ -6,7 +6,6 @@ YELLOW='\033[1;33m'
 BLUE='\033[1;34m'
 NC='\033[1;30m' # No Color
 DEF='\033[0m' # Default Color
-DEVICE_NAME="FPT-"$(hostname)
 
 LOCK_STATE=$HOME/.agent/.lock-state
 if [ -f $LOCK_STATE ];
