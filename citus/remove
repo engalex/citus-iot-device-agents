@@ -10,7 +10,7 @@ export PYTHONIOENCODING=utf8
 LOCK_STATE=$HOME/.agent/.lock-state
 if [ -f $LOCK_STATE ];
 then
-   	echo "${BLUE}INFO: Removing device ${DEVICE_ID}...${NC}"
+   	echo -e "${BLUE}INFO: Removing device ${DEVICE_ID}...${NC}"
    	citus-device revoke
    	rm -rf $HOME/.agent/   	   	
    	echo -e "${BLUE}INFO: The Device is cleanned successfully.${NC}"   	
