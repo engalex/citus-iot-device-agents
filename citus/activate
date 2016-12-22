@@ -25,7 +25,7 @@ else
 		echo -e "| ACTIVATION CODE: ${PINCODE} |"
 		echo -e "=========================${NC}"
 		if [ "${SELF_ACTIVATION}" == "YES" ]; then
-			citus-device register
+			citus-device register ${PINCODE}
 		fi
 	elif [ "${DEVICE_STATUS}" == "registered" ]; then
 		echo -e "${YELLOW}WARN: The DeviceID: ${DEVICE_ID} has already used on another device! Please pickup another one and try again.${NC}"
