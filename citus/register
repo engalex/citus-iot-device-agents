@@ -35,7 +35,7 @@ else
 				GEO_LOCATION=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['address']" 2> /dev/null)
 				GEO_LATITUDE=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['latitude']" 2> /dev/null)
 				GEO_LONGITUDE=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['longitude']" 2> /dev/null)
-				RESULT=$(curl -H "Content-Type: application/json" -X PUT -d '{"name":"'"${DEVICE_ID}"'","owner":"'"${DEVICE_OWNER}"'","_metadata":{"name":"'"${DEVICE_NAME}"'","type": "Default","location": "${GEO_LOCATION}","latitude": "${GEO_LATITUDE}","longitude": "${GEO_LONGITUDE}"}}' -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY})
+				RESULT=$(curl -H "Content-Type: application/json" -X PUT -d '{"name":"'"${DEVICE_ID}"'","owner":"'"${DEVICE_OWNER}"'","_metadata":{"name":"'"${DEVICE_NAME}"'","type": "Default","location": "'"${GEO_LOCATION}"'","latitude": "'"${GEO_LATITUDE}"'","longitude": "'"${GEO_LONGITUDE}"'"}}' -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY})
 				echo -e "${YELLOW}INFO: Installed Certificates:${NC}"
 				ls -td $(find $HOME/.agent/certs/)
 				(echo "* * * * * /usr/sbin/citus-device update >$HOME/.agent/update.log ") | crontab -
