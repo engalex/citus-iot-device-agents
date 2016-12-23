@@ -4,7 +4,7 @@ MAINTAINER DUONG Dinh Cuong <cuong3ihut@gmail.com>
 COPY . /data
 WORKDIR /data
 
-ENV DEVICE_ID= SECRET_KEY= SELF_ACTIVATION=NO INSTALL_DOCKER=NO
+ENV DEVICE_ID= SECRET_KEY= INSTALL_ALL=NO INSTALL_DOCKER=NO
 
 # bower requires this configuration parameter to allow bower install using root.
 RUN echo '{ "allow_root": true }'>.bowerrc
