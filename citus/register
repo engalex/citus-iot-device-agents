@@ -46,7 +46,7 @@ else
 			echo -e "${RED}ERROR: No certificates bundle found!${NC}"
 		fi
 	elif [ "${DEVICE_STATUS}" == "registered" ]; then
-		echo -e "${YELLOW}WARN: The DeviceID: ${DEVICE_ID} has already used on another device! Please pickup another one and try again.${NC}"
+		echo -e "${YELLOW}WARN: The device ${DEVICE_ID} has already used on another device! Please pickup another one and try again.${NC}"
 	else
 		echo -e "${RED}ERROR: ${DEVICE_OBJECT}${NC}"
 	fi
