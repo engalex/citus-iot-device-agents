@@ -6,7 +6,7 @@ BLUE='\033[1;34m'
 NC='\033[1;30m' # No Color
 DEF='\033[0m' # Default Color
 
-INSTALLED_STATE=$/usr/sbin/citus-device
+INSTALLED_STATE=/usr/sbin/citus-device
 if [ -f $INSTALLED_STATE ];
 then
 	echo -e "${BLUE}INFO: Installing citus-device CLI libraries....${NC}"
