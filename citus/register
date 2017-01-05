@@ -23,13 +23,13 @@ else
 		mkdir -p $HOME/.agent/certs/
 		RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['certificatePem']" 2> /dev/null)
 		if [ -n "${RESULT}" ]; then	
-			echo "${RESULT}" >> "$HOME/.agent/certs/${DEVICE_ID}-certificate.pem.crt"
+			echo "${RESULT}" > "$HOME/.agent/certs/${DEVICE_ID}-certificate.pem.crt"
 			RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['keyPair']['PrivateKey']" 2> /dev/null)	
-			echo "${RESULT}" >> "$HOME/.agent/certs/${DEVICE_ID}-private.pem.key"
+			echo "${RESULT}" > "$HOME/.agent/certs/${DEVICE_ID}-private.pem.key"
 			curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 			RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['device']['status']" 2> /dev/null)
 			if [ "${RESULT}" == "registered" ]; then
-				echo "${RESULT}" >> ${LOCK_STATE}
+				echo "${RESULT}" > ${LOCK_STATE}
 				echo -e "${BLUE}INFO: Device Status - ${RESULT}${NC}"
 				GEOIP_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/geoip)
 				GEO_LOCATION=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['address']" 2> /dev/null)

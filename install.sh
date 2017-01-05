@@ -17,6 +17,6 @@ then
 	echo -e "${DEF}"
 fi
 
-if [ "${INSTALL_ONLY}" != "YES" ]; then	
+if [ "${INSTALL_ALL}" == "YES" ]; then	
 	citus-device activate
 fi
