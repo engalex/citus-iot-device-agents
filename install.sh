@@ -15,6 +15,8 @@ then
 	chmod +x /usr/sbin/citus/*
 	echo -e "${BLUE}INFO: Installed Software Agents successfully.${NC}"
 	echo -e "${DEF}"
+else
+	echo -e "${YELLOW}WARN: Citus Device Agents has already installed yet.${NC}"
 fi
 
 if [ "${INSTALL_ALL}" == "YES" ]; then	
