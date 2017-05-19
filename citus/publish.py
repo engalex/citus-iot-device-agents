@@ -61,13 +61,13 @@ temperature=0
 humidity=0
 
 useWebsocket = False
-host = "iot.ap-northeast-1.amazonaws.com"
+host = "a1t67w73z7o66l.iot.ap-northeast-1.amazonaws.com"
 if not os.environ.get('DEVICE_ID'):
 	print("Missing 'DEVICE_ID' in environment variables")
 	exit(1)
 rootCAPath = os.environ.get('HOME') + "/.agent/certs/root-CA.crt"
 certificatePath = os.environ.get('HOME') + "/.agent/certs/" + os.environ.get('DEVICE_ID') + ".cert.pem"
-privateKeyPath = os.environ.get('HOME') + "/.agent/certs/" + os.environ.get('DEVICE_ID') + ".privkey.pem"
+privateKeyPath = os.environ.get('HOME') + "/.agent/certs/" + os.environ.get('DEVICE_ID') + ".private.key"
 clientId = os.environ.get('DEVICE_ID')
 
 try:
@@ -95,7 +95,7 @@ except getopt.GetoptError:
 	exit(1)
 
 # Building the payload
-JSONPayload = {'value':value, 'unit':unit, 'label':label, '@timestamp':int(round(time.time() * 1000)), 'temperature':temperature, 'humidity':humidity, 'ID':os.environ.get('DEVICE_ID')}
+JSONPayload = {'value':float(value), 'unit':unit, 'label':label, '@timestamp':int(round(time.time() * 1000)), 'temperature':float(temperature), 'humidity':float(humidity), 'ID':os.environ.get('DEVICE_ID')}
 print json.dumps(JSONPayload, ensure_ascii=True)
 
 # Missing configuration notification
