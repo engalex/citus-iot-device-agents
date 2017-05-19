@@ -1,0 +1,16 @@
+#!/bin/sh
+# stop script on error
+set -e
+
+# install AWS Device SDK for Python if not already installed
+if [ ! -d ./aws-iot-device-sdk-python ]; then
+  printf "\nInstalling AWS SDK...\n"
+  git clone https://github.com/aws/aws-iot-device-sdk-python.git
+  pushd aws-iot-device-sdk-python
+  python setup.py install
+  popd
+fi
+
+# run pub/sub sample app using certificates downloaded in package
+printf "\nRuning pub/sub sample application...\n"
+python aws-iot-device-sdk-python/samples/basicPubSub/basicPubSub.py -e a1t67w73z7o66l.iot.ap-northeast-1.amazonaws.com -r $HOME/.agent/certs/root-CA.crt -c $HOME/.agent/certs/${DEVICE_ID}.cert.pem -k $HOME/.agent/certs/${DEVICE_ID}.private.key
