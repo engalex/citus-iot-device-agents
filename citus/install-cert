@@ -17,6 +17,7 @@ then
    	echo -e "${BLUE}INFO: The certificates of device ${DEVICE_ID} has already installed successfully.${NC}"
 else
 	mkdir -p $HOME/.agent/certs/
+	curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 	PAYLOAD=$(curl -H "Content-Type: application/json" --header "Authorization: Bearer ${ACCESS_TOKEN}" -L ${SERVICE_ENDPOINT}/certificate/${CERTIFICATE_ID})		
 	RESULT_CERT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificatePem']" 2> /dev/null)
 	if [ -n "${RESULT_CERT}" ]; then
@@ -31,9 +32,7 @@ else
 	else
 		echo -e "${RED}No private key found in the device metadata.${NC}"
 		echo -e "${YELLOW}Require a running hardware with the memory from 512MB.${NC}"
-	fi	
-	curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
-	echo "registered" > "${LOCK_STATE}"
+	fi
 	echo -e "${YELLOW}INFO: Update Device Metadata Infor:${NC}"
 	GEOIP_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/geoip)
 	GEO_LOCATION=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['address']" 2> /dev/null)
