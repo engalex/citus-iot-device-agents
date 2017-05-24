@@ -19,7 +19,7 @@ else
 	DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']" 2> /dev/null)
 	SERIAL_NUMBER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']" 2> /dev/null)	
 	
-	if [ "${DEVICE_STATUS}" == "unregistered" ]; then		
+	if [ "${DEVICE_STATUS}" = "unregistered" ]; then		
 		PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'","pincode":"'"${PINCODE}"'"}' -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/lifecycle/registration?secret_key=${SECRET_KEY})
 		mkdir -p $HOME/.agent/certs/
 		RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['certificatePem']" 2> /dev/null)
@@ -29,7 +29,7 @@ else
 			echo "${RESULT}" > "$HOME/.agent/certs/${DEVICE_ID}.private.key"
 			curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 			RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['device']['status']" 2> /dev/null)
-			if [ "${RESULT}" == "registered" ]; then
+			if [ "${RESULT}" = "registered" ]; then
 				echo "${RESULT}" > ${LOCK_STATE}
 				echo -e "${BLUE}INFO: Device Status - ${RESULT}${NC}"
 				GEOIP_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/geoip)
@@ -46,7 +46,7 @@ else
 		else
 			echo -e "${RED}ERROR: No certificates bundle found!${NC}"
 		fi
-	elif [ "${DEVICE_STATUS}" == "registered" ]; then
+	elif [ "${DEVICE_STATUS}" = "registered" ]; then
 		echo -e "${YELLOW}WARN: The device ${DEVICE_ID} has already used on another device! Please pickup another one and try again.${NC}"
 	else
 		echo -e "${RED}ERROR: ${DEVICE_OBJECT}${NC}"

@@ -20,7 +20,7 @@ else
 	DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']" 2> /dev/null)
 	CERTIFICATE_ID=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['certificateId']" 2> /dev/null)
 	
-	if [ "${DEVICE_STATUS}" == "registered" ]; then		
+	if [ "${DEVICE_STATUS}" = "registered" ]; then		
 		PAYLOAD=$(curl -H "Content-Type: application/json" --header "Authorization: Bearer ${ACCESS_TOKEN}" -L ${SERVICE_ENDPOINT}/certificate/${CERTIFICATE_ID})
 		mkdir -p $HOME/.agent/certs/
 		RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificatePem']" 2> /dev/null)
@@ -41,7 +41,7 @@ else
 		else
 			echo -e "${RED}ERROR: No certificates bundle found!${NC}"
 		fi
-	elif [ "${DEVICE_STATUS}" == "unregistered" ]; then
+	elif [ "${DEVICE_STATUS}" = "unregistered" ]; then
 		echo -e "${YELLOW}WARN: The device ${DEVICE_ID} has not activated yet therefore no certificate is available.${NC}"
 	else
 		echo -e "${RED}ERROR: ${DEVICE_OBJECT}${NC}"
