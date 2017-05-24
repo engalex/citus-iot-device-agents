@@ -18,7 +18,7 @@ else
 	DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']" 2> /dev/null)
 	SERIAL_NUMBER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']" 2> /dev/null)	
 	
-	if [[ "${DEVICE_STATUS}" == "unregistered" ]]; then
+	if [ "${DEVICE_STATUS}" = "unregistered" ]; then
 		PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'"}' -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/lifecycle/initialization?secret_key=${SECRET_KEY})	
 		PINCODE=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['pincode']" 2> /dev/null)		
 		if [ "${INSTALL_ALL}" == "YES" ]; then
@@ -29,7 +29,7 @@ else
 			echo -e "| ACTIVATION CODE: ${PINCODE} |"
 			echo -e "=========================${NC}"
 		fi
-	elif [[ "${DEVICE_STATUS}" == "registered" ]]; then
+	elif [ "${DEVICE_STATUS}" = "registered" ]; then
 		echo -e "${YELLOW}WARN: The device ${DEVICE_ID} has already used on another device! Please pickup another one and try again.${NC}"
 	else
 		echo -e "${RED}ERROR: ${DEVICE_OBJECT}${NC}"
