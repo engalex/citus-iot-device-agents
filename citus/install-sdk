@@ -11,7 +11,7 @@ set -e
 
 # install AWS Device SDK for Python if not already installed
 if [ ! -d ./aws-iot-device-sdk-python ]; then
-  printf "\nInstalling AWS SDK...\n"
+  echo -e "${BLUE}INFO: Installing AWS SDK...${NC}"
   git clone https://github.com/aws/aws-iot-device-sdk-python.git
   cd aws-iot-device-sdk-python/
   python setup.py install
