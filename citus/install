@@ -23,10 +23,10 @@ else
 	if [ "${DEVICE_STATUS}" = "registered" ]; then		
 		PAYLOAD=$(curl -H "Content-Type: application/json" --header "Authorization: Bearer ${ACCESS_TOKEN}" -L ${SERVICE_ENDPOINT}/certificate/${CERTIFICATE_ID})
 		mkdir -p $HOME/.agent/certs/
-		RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['certificatePem']" 2> /dev/null)
+		RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificatePem']" 2> /dev/null)
 		if [ -n "${RESULT}" ]; then	
 			echo "${RESULT}" > "$HOME/.agent/certs/${DEVICE_ID}.cert.pem"
-			RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['keyPair']['PrivateKey']" 2> /dev/null)	
+			RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['keyPair']['PrivateKey']" 2> /dev/null)	
 			echo "${RESULT}" > "$HOME/.agent/certs/${DEVICE_ID}.private.key"
 			curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 			echo "${DEVICE_STATUS}" > "${LOCK_STATE}"
