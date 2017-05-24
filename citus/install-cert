@@ -19,9 +19,17 @@ else
 	mkdir -p $HOME/.agent/certs/
 	PAYLOAD=$(curl -H "Content-Type: application/json" --header "Authorization: Bearer ${ACCESS_TOKEN}" -L ${SERVICE_ENDPOINT}/certificate/${CERTIFICATE_ID})		
 	RESULT_CERT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificatePem']" 2> /dev/null)
-	echo "${RESULT_CERT}" > "$HOME/.agent/certs/${DEVICE_ID}.cert.pem"
-	RESULT_KEY=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['keyPair']['PrivateKey']" 2> /dev/null)	
-	echo "${RESULT_KEY}" > "$HOME/.agent/certs/${DEVICE_ID}.private.key"
+	if [ -n "${RESULT_CERT}" ]; then
+		echo "${RESULT_CERT}" > "$HOME/.agent/certs/${DEVICE_ID}.cert.pem"
+	else
+		echo -e "${RED}No certificate found in the device metadata"
+	fi
+	RESULT_KEY=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['keyPair']['PrivateKey']" 2> /dev/null)
+	if [ -n "${RESULT_KEY}" ]; then
+		echo "${RESULT_KEY}" > "$HOME/.agent/certs/${DEVICE_ID}.private.key"
+	else
+		echo -e "${RED}No private key found in the device metadata"
+	fi		
 	curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 	echo "${DEVICE_STATUS}" > "${LOCK_STATE}"
 	GEOIP_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/geoip)
