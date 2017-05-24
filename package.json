@@ -1,0 +1,23 @@
+{
+	"name": "citus-iot-device-agents",
+	"version": "0.1.5",
+	"description": "The cituss sdk with device agent.",
+	"license": "Apache-2.0",
+	"keywords": [
+		"citus-iot",
+		"aws",
+		"sdk"
+	],
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/cuongquay/citus-iot-device-agents"
+	},
+	"scripts": {
+		"prepare": "mversion patch -mn 'Patch new version and publish'",
+		"postpublish": "git push && git push --tags"
+	},
+	"author": {
+		"name": "DUONG Dinh Cuong",
+		"email": "cuong3ihut@gmail.com"
+	}
+}
