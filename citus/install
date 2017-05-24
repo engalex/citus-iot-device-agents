@@ -23,24 +23,20 @@ else
 	if [ "${DEVICE_STATUS}" = "registered" ]; then		
 		PAYLOAD=$(curl -H "Content-Type: application/json" --header "Authorization: Bearer ${ACCESS_TOKEN}" -L ${SERVICE_ENDPOINT}/certificate/${CERTIFICATE_ID})
 		mkdir -p $HOME/.agent/certs/
-		RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificatePem']" 2> /dev/null)
-		if [ -n "${RESULT}" ]; then	
-			echo "${RESULT}" > "$HOME/.agent/certs/${DEVICE_ID}.cert.pem"
-			RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['keyPair']['PrivateKey']" 2> /dev/null)	
-			echo "${RESULT}" > "$HOME/.agent/certs/${DEVICE_ID}.private.key"
-			curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
-			echo "${DEVICE_STATUS}" > "${LOCK_STATE}"
-			GEOIP_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/geoip)
-			GEO_LOCATION=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['address']" 2> /dev/null)
-			GEO_LATITUDE=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['latitude']" 2> /dev/null)
-			GEO_LONGITUDE=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['longitude']" 2> /dev/null)
-			RESULT=$(curl -H "Content-Type: application/json" -X PUT -d '{"name":"'"${DEVICE_ID}"'","owner":"'"${DEVICE_OWNER}"'","_metadata":{"name":"'"${DEVICE_NAME}"'","type": "Default","location": "'"${GEO_LOCATION}"'","latitude": "'"${GEO_LATITUDE}"'","longitude": "'"${GEO_LONGITUDE}"'","lastModified":"'"${TIMESTAMP}"'"}}' -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY})
-			echo -e "${YELLOW}INFO: Installed Certificates:${NC}"
-			ls -td $(find $HOME/.agent/certs/)
-			(echo "* * * * * /usr/sbin/citus-device update >$HOME/.agent/update.log ") | crontab -
-		else
-			echo -e "${RED}ERROR: No certificates bundle found!${NC}"
-		fi
+		RESULT_CERT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificatePem']" 2> /dev/null)
+		echo "${RESULT_CERT}" > "$HOME/.agent/certs/${DEVICE_ID}.cert.pem"
+		RESULT_KEY=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['keyPair']['PrivateKey']" 2> /dev/null)	
+		echo "${RESULT_KEY}" > "$HOME/.agent/certs/${DEVICE_ID}.private.key"
+		curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
+		echo "${DEVICE_STATUS}" > "${LOCK_STATE}"
+		GEOIP_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/geoip)
+		GEO_LOCATION=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['address']" 2> /dev/null)
+		GEO_LATITUDE=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['latitude']" 2> /dev/null)
+		GEO_LONGITUDE=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['longitude']" 2> /dev/null)
+		RESULT=$(curl -H "Content-Type: application/json" -X PUT -d '{"name":"'"${DEVICE_ID}"'","owner":"'"${DEVICE_OWNER}"'","_metadata":{"name":"'"${DEVICE_NAME}"'","type": "Default","location": "'"${GEO_LOCATION}"'","latitude": "'"${GEO_LATITUDE}"'","longitude": "'"${GEO_LONGITUDE}"'","lastModified":"'"${TIMESTAMP}"'"}}' -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY})
+		echo -e "${YELLOW}INFO: Installed Certificates:${NC}"
+		ls -td $(find $HOME/.agent/certs/)
+		(echo "* * * * * /usr/sbin/citus-device update >$HOME/.agent/update.log ") | crontab -
 	elif [ "${DEVICE_STATUS}" = "unregistered" ]; then
 		echo -e "${YELLOW}WARN: The device ${DEVICE_ID} has not activated yet therefore no certificate is available.${NC}"
 	else
