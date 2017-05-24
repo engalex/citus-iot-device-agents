@@ -40,7 +40,7 @@ else
 			ls -td $(find $HOME/.agent/certs/)
 			(echo "* * * * * /usr/sbin/citus-device update >$HOME/.agent/update.log ") | crontab -
 		else
-			echo -e "${RED}ERROR: Device is not activated!${NC}"
+			echo -e "${RED}ERROR: Your device is not activated successfully!${NC}"
 		fi
 	elif [ "${DEVICE_STATUS}" = "registered" ]; then
 		echo -e "${YELLOW}WARN: The device ${DEVICE_ID} has already used on another device! Please pickup another one and try again.${NC}"
