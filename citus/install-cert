@@ -1,0 +1,36 @@
+#!/bin/sh
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[1;34m'
+NC='\033[1;30m' # No Color
+DEF='\033[0m' # Default Color
+DEVICE_NAME="FPT-"$(hostname)
+ACCESS_TOKEN=${1:-Unknown}
+CERTIFICATE_ID=${2:-Unknown}
+LOCK_STATE=$HOME/.agent/.lock-state
+CERTS_STATE=$HOME/.agent/certs
+TIMESTAMP=$(date +%s000)
+
+if [ -f $CERTS_STATE ];
+then
+   	echo -e "${BLUE}INFO: The certificates of device ${DEVICE_ID} has already installed successfully.${NC}"
+else
+	mkdir -p $HOME/.agent/certs/
+	PAYLOAD=$(curl -H "Content-Type: application/json" --header "Authorization: Bearer ${ACCESS_TOKEN}" -L ${SERVICE_ENDPOINT}/certificate/${CERTIFICATE_ID})		
+	RESULT_CERT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificatePem']" 2> /dev/null)
+	echo "${RESULT_CERT}" > "$HOME/.agent/certs/${DEVICE_ID}.cert.pem"
+	RESULT_KEY=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['keyPair']['PrivateKey']" 2> /dev/null)	
+	echo "${RESULT_KEY}" > "$HOME/.agent/certs/${DEVICE_ID}.private.key"
+	curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
+	echo "${DEVICE_STATUS}" > "${LOCK_STATE}"
+	GEOIP_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/geoip)
+	GEO_LOCATION=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['address']" 2> /dev/null)
+	GEO_LATITUDE=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['latitude']" 2> /dev/null)
+	GEO_LONGITUDE=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['longitude']" 2> /dev/null)
+	RESULT=$(curl -H "Content-Type: application/json" -X PUT -d '{"name":"'"${DEVICE_ID}"'","owner":"'"${DEVICE_OWNER}"'","_metadata":{"name":"'"${DEVICE_NAME}"'","type": "Default","location": "'"${GEO_LOCATION}"'","latitude": "'"${GEO_LATITUDE}"'","longitude": "'"${GEO_LONGITUDE}"'","lastModified":"'"${TIMESTAMP}"'"}}' -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY})
+	echo -e "${YELLOW}INFO: Installed Certificates:${NC}"
+	ls -td $(find $HOME/.agent/certs/)
+	(echo "* * * * * /usr/sbin/citus-device update >$HOME/.agent/update.log ") | crontab -
+fi
+echo -e "${DEF}"
