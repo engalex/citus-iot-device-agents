@@ -31,9 +31,9 @@ else
 	else
 		echo -e "${RED}No private key found in the device metadata.${NC}"
 		echo -e "${YELLOW}Require a running hardware with the memory from 512MB.${NC}"
-	fi		
+	fi	
 	curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
-	echo "${DEVICE_STATUS}" > "${LOCK_STATE}"
+	echo "registered" > "${LOCK_STATE}"
 	echo -e "${YELLOW}INFO: Update Device Metadata Infor:${NC}"
 	GEOIP_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/geoip)
 	GEO_LOCATION=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['address']" 2> /dev/null)
