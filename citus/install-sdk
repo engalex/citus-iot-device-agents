@@ -1,5 +1,12 @@
 #!/bin/sh
 # stop script on error
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[1;34m'
+NC='\033[1;30m' # No Color
+DEF='\033[0m' # Default Color
+
 set -e
 
 # install AWS Device SDK for Python if not already installed
@@ -8,13 +15,14 @@ if [ ! -d ./aws-iot-device-sdk-python ]; then
   git clone https://github.com/aws/aws-iot-device-sdk-python.git
   cd aws-iot-device-sdk-python/
   python setup.py install
+  echo -e "${BLUE}INFO: Citus IoT Device SDK has already installed successfully.${NC}"
   cd ../
 else
-  echo "Citus IoT Device SDK has already installed."
+  echo -e "${BLUE}INFO: Citus IoT Device SDK has already installed yet.${NC}"
 fi
 
 # run pub/sub sample app using certificates downloaded in package
 #printf "\nRuning pub/sub sample application...\n"
 #python aws-iot-device-sdk-python/samples/basicPubSub/basicPubSub.py -e a1t67w73z7o66l.iot.ap-northeast-1.amazonaws.com -r $HOME/.agent/certs/root-CA.crt -c $HOME/.agent/certs/${DEVICE_ID}.cert.pem -k $HOME/.agent/certs/${DEVICE_ID}.private.key
-echo "Testing the first sample connection to the cloud."
+echo -e "${BLUE}INFO: Testing the first sample connection to the cloud.${NC}"
 citus-device send -v 80 -t 25.5 -i 68.8
