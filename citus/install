@@ -19,10 +19,10 @@ else
 	DEVICE_OWNER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['owner']" 2> /dev/null)
 	DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']" 2> /dev/null)
 	CERTIFICATE_ID=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['certificateId']" 2> /dev/null)
-	
-	if [ "${DEVICE_STATUS}" = "registered" ]; then		
-		PAYLOAD=$(curl -H "Content-Type: application/json" --header "Authorization: Bearer ${ACCESS_TOKEN}" -L ${SERVICE_ENDPOINT}/certificate/${CERTIFICATE_ID})
+
+	if [ "${DEVICE_STATUS}" = "registered" ]; then
 		mkdir -p $HOME/.agent/certs/
+		PAYLOAD=$(curl -H "Content-Type: application/json" --header "Authorization: Bearer ${ACCESS_TOKEN}" -L ${SERVICE_ENDPOINT}/certificate/${CERTIFICATE_ID})		
 		RESULT_CERT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificatePem']" 2> /dev/null)
 		echo "${RESULT_CERT}" > "$HOME/.agent/certs/${DEVICE_ID}.cert.pem"
 		RESULT_KEY=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['keyPair']['PrivateKey']" 2> /dev/null)	
