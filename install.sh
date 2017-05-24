@@ -19,6 +19,6 @@ else
 	echo -e "${YELLOW}WARN: Citus Device Agents has already installed yet.${NC}"
 fi
 
-if [ "${INSTALL_ALL}" == "YES" ]; then	
+if [[ "${INSTALL_ALL}" == "YES" ]]; then
 	citus-device activate
 fi
