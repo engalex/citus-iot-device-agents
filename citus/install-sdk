@@ -9,9 +9,12 @@ if [ ! -d ./aws-iot-device-sdk-python ]; then
   cd aws-iot-device-sdk-python/
   python setup.py install
   cd ../
+else
+  echo "Citus IoT Device SDK has already installed."
 fi
 
 # run pub/sub sample app using certificates downloaded in package
 #printf "\nRuning pub/sub sample application...\n"
 #python aws-iot-device-sdk-python/samples/basicPubSub/basicPubSub.py -e a1t67w73z7o66l.iot.ap-northeast-1.amazonaws.com -r $HOME/.agent/certs/root-CA.crt -c $HOME/.agent/certs/${DEVICE_ID}.cert.pem -k $HOME/.agent/certs/${DEVICE_ID}.private.key
+echo "Testing the first sample connection to the cloud."
 citus-device send -v 80 -t 25.5 -i 68.8
