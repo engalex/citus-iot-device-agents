@@ -6,9 +6,9 @@ set -e
 if [ ! -d ./aws-iot-device-sdk-python ]; then
   printf "\nInstalling AWS SDK...\n"
   git clone https://github.com/aws/aws-iot-device-sdk-python.git
-  pushd aws-iot-device-sdk-python
+  cd aws-iot-device-sdk-python/
   python setup.py install
-  popd
+  cd ../
 fi
 
 # run pub/sub sample app using certificates downloaded in package
