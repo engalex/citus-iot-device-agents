@@ -22,16 +22,17 @@ else
 	if [ -n "${RESULT_CERT}" ]; then
 		echo "${RESULT_CERT}" > "$HOME/.agent/certs/${DEVICE_ID}.cert.pem"
 	else
-		echo -e "${RED}No certificate found in the device metadata or you are running a hardware with the memory less than 512M"
+		echo -e "${RED}No certificate found in the device metadata or you are running a hardware with the memory less than 512M.${NC}"
 	fi
 	RESULT_KEY=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['keyPair']['PrivateKey']" 2> /dev/null)
 	if [ -n "${RESULT_KEY}" ]; then
 		echo "${RESULT_KEY}" > "$HOME/.agent/certs/${DEVICE_ID}.private.key"
 	else
-		echo -e "${RED}No private key found in the device metadata or you are running a hardware with the memory less than 512M"
+		echo -e "${RED}No private key found in the device metadata or you are running a hardware with the memory less than 512M.${NC}"
 	fi		
 	curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 	echo "${DEVICE_STATUS}" > "${LOCK_STATE}"
+	
 	GEOIP_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/geoip)
 	GEO_LOCATION=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['address']" 2> /dev/null)
 	GEO_LATITUDE=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['latitude']" 2> /dev/null)
