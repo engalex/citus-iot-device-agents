@@ -18,11 +18,11 @@ else
 	mkdir -p $HOME/.agent/certs/
 	curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 	
-	python getcert.py ${CERTIFICATE_ID} ${ACCESS_TOKEN}
+	python /usr/sbin/citus/getcert.py ${CERTIFICATE_ID} ${ACCESS_TOKEN}
 	
 	echo -e "${GREEN}INFO: Update Device Metadata Infor:${NC}"
 	
-	python setinfo.py ${DEVICE_OWNER}
+	python /usr/sbin/citus/setinfo.py ${DEVICE_OWNER}
 	
 	echo -e "${GREEN}INFO: Installed Certificates:${NC}"
 	ls -td $(find $HOME/.agent/certs/)
