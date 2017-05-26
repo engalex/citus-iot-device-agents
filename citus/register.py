@@ -13,6 +13,6 @@ try:
         f.write(data['certificates']['certificatePem'])
     with open(os.environ.get('HOME') + '/.agent/certs/' + os.environ.get('DEVICE_ID') + '.private.key', 'w') as f:
         f.write(data['certificates']['keyPair']['PrivateKey'])
-    print resp['device']['status']
+    print data['device']['status']
 except requests.exceptions.RequestException as e:
     print 'Eror while retreiving certificate information: {}'.format(e)
