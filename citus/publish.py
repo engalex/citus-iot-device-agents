@@ -144,4 +144,4 @@ time.sleep(2)
 
 # Publish to the same topic in a loop forever
 myAWSIoTMQTTClient.publish("telemetry/sensors", json.dumps(JSONPayload, ensure_ascii=True), 1)
-time.sleep(1)
+time.sleep(2)
