@@ -1,0 +1,21 @@
+#!/bin/sh
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[1;34m'
+NC='\033[1;30m' # No Color
+DEF='\033[0m' # Default Color
+
+export PYTHONIOENCODING=utf8
+LOCK_STATE=$HOME/.agent/.lock-state
+if [ -f $LOCK_STATE ];
+then
+   	echo -e "${BLUE}INFO: Cleanup device ${DEVICE_ID}...${NC}"   	
+   	rm -rf $HOME/.agent/
+   	rm -rf /usr/sbin/citus/
+   	rm -f /usr/sbin/citus-device
+   	echo -e "${BLUE}INFO: The Device is cleanned successfully.${NC}"   	
+else
+	echo -e "${RED}ERROR: This device is not installed yet.${NC}"
+fi
+echo -e "${DEF}"
