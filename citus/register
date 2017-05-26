@@ -20,20 +20,10 @@ else
 	SERIAL_NUMBER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']" 2> /dev/null)	
 	
 	if [ "${DEVICE_STATUS}" = "unregistered" ]; then		
-		PAYLOAD=$(curl -H "Content-Type: application/json" -X POST -d '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'","pincode":"'"${PINCODE}"'"}' -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/lifecycle/registration?secret_key=${SECRET_KEY})
 		mkdir -p $HOME/.agent/certs/
-		RESULT_CERT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['certificatePem']" 2> /dev/null)
-		if [ -n "${RESULT_CERT}" ]; then
-			echo "${RESULT_CERT}" > "$HOME/.agent/certs/${DEVICE_ID}.cert.pem"
-		else
-			echo -e "${RED}No certificate found in the device metadata or you are running a hardware with the memory less than 512M"
-		fi
-		RESULT_KEY=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['certificates']['keyPair']['PrivateKey']" 2> /dev/null)
-		if [ -n "${RESULT_KEY}" ]; then
-			echo "${RESULT_KEY}" > "$HOME/.agent/certs/${DEVICE_ID}.private.key"
-		else
-			echo -e "${RED}No private key found in the device metadata or you are running a hardware with the memory less than 512M"
-		fi
+		
+		python register.py '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'","pincode":"'"${PINCODE}"'"}'
+
 		curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 		RESULT=$(echo ${PAYLOAD} | python -c "import sys, json; print json.load(sys.stdin)['device']['status']" 2> /dev/null)
 		if [ "${RESULT}" = "registered" ]; then
