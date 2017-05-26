@@ -5,12 +5,11 @@ YELLOW='\033[1;33m'
 BLUE='\033[1;34m'
 NC='\033[1;30m' # No Color
 DEF='\033[0m' # Default Color
-DEVICE_NAME="FPT-"$(hostname)
+
 ACCESS_TOKEN=${1:-Unknown}
 CERTIFICATE_ID=${2:-Unknown}
-LOCK_STATE=$HOME/.agent/.lock-state
 CERTS_STATE=$HOME/.agent/certs
-TIMESTAMP=$(date +%s000)
+
 
 if [ -f $CERTS_STATE ];
 then
@@ -23,11 +22,7 @@ else
 	
 	echo -e "${GREEN}INFO: Update Device Metadata Infor:${NC}"
 	
-	GEOIP_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/geoip)
-	GEO_LOCATION=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['address']" 2> /dev/null)
-	GEO_LATITUDE=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['latitude']" 2> /dev/null)
-	GEO_LONGITUDE=$(echo ${GEOIP_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['longitude']" 2> /dev/null)
-	RESULT=$(curl -H "Content-Type: application/json" -X PUT -d '{"name":"'"${DEVICE_ID}"'","owner":"'"${DEVICE_OWNER}"'","_metadata":{"name":"'"${DEVICE_NAME}"'","type": "Default","location": "'"${GEO_LOCATION}"'","latitude": "'"${GEO_LATITUDE}"'","longitude": "'"${GEO_LONGITUDE}"'","lastModified":"'"${TIMESTAMP}"'"}}' -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY})
+	python setinfo.py ${DEVICE_OWNER}
 	
 	echo -e "${GREEN}INFO: Installed Certificates:${NC}"
 	ls -td $(find $HOME/.agent/certs/)
