@@ -24,7 +24,7 @@ else
 		curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 
 		RESULT=$(python /usr/sbin/citus/register.py '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'","pincode":"'"${PINCODE}"'"}')
-		echo ${RESULT}
+				
 		if [ "${RESULT}" = "registered" ]; then
 			echo "${RESULT}" > ${LOCK_STATE}
 			echo -e "${BLUE}INFO: Device Status - ${RESULT}${NC}"
