@@ -8,10 +8,11 @@ try:
     resp = requests.get(os.environ.get('SERVICE_ENDPOINT') + '/geoip')
     data = json.loads(resp.text)
     GEO_LOCATION=data['address']
-    GEO_LATITUDE=data['latitude']
-    GEO_LONGITUDE=data['longitude']
+    GEO_LATITUDE=str(data['latitude'])
+    GEO_LONGITUDE=str(data['longitude'])
     DEVICE_NAME='FPT-' + os.uname()[1]
-    data={'name':os.environ.get('DEVICE_ID'),'owner':sys.argv[1],'_metadata':{'name':DEVICE_NAME,'type': 'Default','location': GEO_LOCATION,'latitude': GEO_LATITUDE,'longitude': GEO_LONGITUDE,'lastModified':int(round(time.time() * 1000))}}    
+    TIMESTAMP=str(int(round(time.time() * 1000)))
+    data={'name':os.environ.get('DEVICE_ID'),'owner':sys.argv[1],'_metadata':{'name':DEVICE_NAME,'type': 'Default','location': GEO_LOCATION,'latitude': GEO_LATITUDE,'longitude': GEO_LONGITUDE,'lastModified': TIMESTAMP}}    
     headers = {'content-type': 'application/json'}
     params = {'secret_key':os.environ.get('SECRET_KEY')}
     result = requests.post(os.environ.get('SERVICE_ENDPOINT') + '/apisrv/device-lifecycle-service/device/' + os.environ.get('DEVICE_ID') + '/_metadata', params=params, data=json.dumps(data), headers=headers)    
