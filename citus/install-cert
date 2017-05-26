@@ -9,7 +9,7 @@ DEF='\033[0m' # Default Color
 ACCESS_TOKEN=${1:-Unknown}
 CERTIFICATE_ID=${2:-Unknown}
 CERTS_STATE=$HOME/.agent/certs
-
+DEVICE_OWNER=${3:-Unknown}
 
 if [ -f $CERTS_STATE ];
 then
