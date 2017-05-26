@@ -30,7 +30,7 @@ else
 			echo "${RESULT}" > ${LOCK_STATE}
 			echo -e "${BLUE}INFO: Device Status - ${RESULT}${NC}"
 			
-			python /usr/sbin/citus/setinfo.py '{"name":"'"${DEVICE_ID}"'","owner":"'"${DEVICE_OWNER}"'","_metadata":{"name":"'"${DEVICE_NAME}"'","type": "Default","location": "'"${GEO_LOCATION}"'","latitude": "'"${GEO_LATITUDE}"'","longitude": "'"${GEO_LONGITUDE}"'","lastModified":"'"${TIMESTAMP}"'"}}'
+			python /usr/sbin/citus/setinfo.py ${DEVICE_OWNER}
 			
 			echo -e "${YELLOW}INFO: Installed Certificates:${NC}"
 			ls -td $(find $HOME/.agent/certs/)
