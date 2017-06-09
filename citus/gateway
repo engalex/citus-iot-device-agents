@@ -18,6 +18,6 @@ else
 	DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']" 2> /dev/null)
 	SERIAL_NUMBER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']" 2> /dev/null)	
 	
-	/usr/sbin/gateway start
+	/usr/sbin/gateway ${DEVICE_ID} ${DEVICE_OWNER} ${DEVICE_STATUS} ${SERIAL_NUMBER} ${SECRET_KEY}
 fi
 echo -e "${DEF}"
