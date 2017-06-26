@@ -6,7 +6,7 @@ import requests
 try:
     headers = {'content-type': 'application/json'}
     params = {'secret_key':os.environ.get('SECRET_KEY')}
-    resp = requests.post(os.environ.get('SERVICE_ENDPOINT') + '/apisrv/device-lifecycle-service/lifecycle/registration', params=params, data=sys.argv[1], headers=headers)
+    resp = requests.post(os.environ.get('SERVICE_ENDPOINT') + '/apisrv/device-management-service/lifecycle/activation', params=params, data=sys.argv[1], headers=headers)
     resp.raise_for_status()
     data = json.loads(resp.text)
     with open(os.environ.get('HOME') + '/.agent/certs/' + os.environ.get('DEVICE_ID') + '.cert.pem', 'w') as f:

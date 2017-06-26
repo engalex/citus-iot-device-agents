@@ -11,7 +11,7 @@ LOCK_STATE=$HOME/.agent/.lock-state
 if [ -f $LOCK_STATE ];
 then
 	echo -e "${BLUE}INFO: Checking for Software Update - ID:${DEVICE_ID}${NC}"
-	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})	
+	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/apisrv/device-management-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})	
 	
 	SERIAL_NUMBER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']" 2> /dev/null)
 	DEVICE_OWNER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['owner']" 2> /dev/null)
@@ -28,7 +28,7 @@ then
 			sh -c "${SOFTWARE_SCRIPT}" | tee ; ( exit ${PIPESTATUS} ); 
 			RETCODE=$(echo "$?")
 			if [ "${RETCODE}" = 0 ]; then
-				RESULT=$(curl -H "Content-Type: application/json" -X PUT -d '{"name":"'"${DEVICE_ID}"'","owner":"'"${DEVICE_OWNER}"'","_metadata":{"updated":true}}' -L ${SERVICE_ENDPOINT}/apisrv/device-lifecycle-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY})
+				RESULT=$(curl -H "Content-Type: application/json" -X PUT -d '{"name":"'"${DEVICE_ID}"'","owner":"'"${DEVICE_OWNER}"'","_metadata":{"updated":true}}' -L ${SERVICE_ENDPOINT}/apisrv/device-management-service/device/${DEVICE_ID}/_metadata?secret_key=${SECRET_KEY})
 				echo -e "INFO: ${RESULT}"
 				echo -e "${GREEN}INFO: The device ${DEVICE_ID} is up-to-date.${NC}"
 			else

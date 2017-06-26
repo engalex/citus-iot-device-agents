@@ -4,7 +4,9 @@ import json
 import requests
 
 try:
-    resp = requests.get(os.environ.get('SERVICE_ENDPOINT') + '/certificate/' + sys.argv[1], headers={'Authorization': 'Bearer ' + sys.argv[2]})
+    headers = {'content-type': 'application/json'}
+    params = {'secret_key':os.environ.get('SECRET_KEY')}
+    resp = requests.get(os.environ.get('SERVICE_ENDPOINT') + '/' + sys.argv[1] + '/certificates', params=params, headers=headers)
     resp.raise_for_status()
     data = json.loads(resp.text)
     with open(os.environ.get('HOME') + '/.agent/certs/' + os.environ.get('DEVICE_ID') + '.cert.pem', 'w') as f:
