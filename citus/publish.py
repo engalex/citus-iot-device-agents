@@ -22,15 +22,16 @@ import logging
 import time
 import getopt
 import json
+import random
 
 # Usage
 usageInfo = """Usage:
 
 Use MQTT over TCP on port 8883
-$ python publish.py -l <label> -u <unit> -v <value> -t <temperature> -i <humidity>
+$ citus-device send -p <topic> -v <value> -t <temperature> -i <humidity> -l <label> -u <unit> 
 
 Use MQTT over WebSocket:
-$ python publish.py -l <label> -u <unit> -v <value> -t <temperature> -i <humidity> -w
+$ citus-device send -p <topic> -v <value> -t <temperature> -i <humidity> -l <label> -u <unit> -w  
 
 Type "python publish.py -h" for available options.
 """
@@ -54,11 +55,13 @@ helpInfo = """-l, --label
 """
 
 # Read in command-line parameters
+topic="telemetry/sensors"
 label="Leakage"
 unit="PPM"
-value=0
-temperature=0
-humidity=0
+value=random.uniform(1, 100)
+temperature=random.uniform(10, 40)
+humidity=random.uniform(60, 90)
+number_of_samples=10
 
 useWebsocket = False
 host = "a1t67w73z7o66l.iot.ap-northeast-1.amazonaws.com"
@@ -72,13 +75,15 @@ clientId = os.environ.get('DEVICE_ID')
 deviceOwner = os.environ.get('DEVICE_OWNER')
 
 try:
-	opts, args = getopt.getopt(sys.argv[1:], "hwluv:t:i:", ["help", "label=", "unit=", "value=","temperature=","humidity=", "websocket"])
+	opts, args = getopt.getopt(sys.argv[1:], "hwlusvtip", ["help", "topic=", "label=", "unit=", "value=","temperature=","humidity=", "samples=", "websocket"])
 	if len(opts) == 0:
 		raise getopt.GetoptError("No input parameters!")
 	for opt, arg in opts:
 		if opt in ("-h", "--help"):
 			print(helpInfo)
 			exit(0)
+		if opt in ("-p", "--topic"):
+			topic = arg
 		if opt in ("-l", "--label"):
 			label = arg
 		if opt in ("-u", "--unit"):
@@ -89,6 +94,8 @@ try:
 			temperature = arg
 		if opt in ("-i", "--humidity"):
 			humidity = arg
+		if opt in ("-n", "--samples"):
+			number_of_samples = arg
 		if opt in ("-w", "--websocket"):
 			useWebsocket = True
 except getopt.GetoptError:
@@ -98,20 +105,6 @@ except getopt.GetoptError:
 # Building the payload
 JSONPayload = {'value':float(value), 'unit':unit, 'label':label, '@timestamp':int(round(time.time() * 1000)), 'temperature':float(temperature), 'humidity':float(humidity), 'ID':clientId, 'ownerID':deviceOwner}
 print json.dumps(JSONPayload, ensure_ascii=True)
-
-# Missing configuration notification
-missingConfiguration = False
-if value==0:
-	print("Missing '-v' or '--value'")
-	missingConfiguration = True
-if temperature==0:
-	print("Missing '-t' or '--temperature'")
-	missingConfiguration = True
-if humidity==0:
-	print("Missing '-i' or '--humidity'")
-	missingConfiguration = True
-if missingConfiguration:
-	exit(2)
 
 # Configure logging
 logger = logging.getLogger("AWSIoTPythonSDK.core")
@@ -143,6 +136,12 @@ myAWSIoTMQTTClient.configureMQTTOperationTimeout(5)  # 5 sec
 myAWSIoTMQTTClient.connect()
 time.sleep(2)
 
-# Publish to the same topic in a loop forever
-myAWSIoTMQTTClient.publish("telemetry/sensors", json.dumps(JSONPayload, ensure_ascii=True), 1)
-time.sleep(2)
+count = 0
+while (count < number_of_samples):
+	# Publish to the same topic in a loop forever
+	myAWSIoTMQTTClient.publish(topic, json.dumps(JSONPayload, ensure_ascii=True), 1)
+	value=random.uniform(1, 100)
+	temperature=random.uniform(10, 40)
+	humidity=random.uniform(60, 90)
+	count = count + 1
+	time.sleep(1)
