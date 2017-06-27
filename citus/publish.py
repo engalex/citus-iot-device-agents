@@ -69,6 +69,7 @@ rootCAPath = os.environ.get('HOME') + "/.agent/certs/root-CA.crt"
 certificatePath = os.environ.get('HOME') + "/.agent/certs/" + os.environ.get('DEVICE_ID') + ".cert.pem"
 privateKeyPath = os.environ.get('HOME') + "/.agent/certs/" + os.environ.get('DEVICE_ID') + ".private.key"
 clientId = os.environ.get('DEVICE_ID')
+deviceOwner = os.environ.get('DEVICE_OWNER')
 
 try:
 	opts, args = getopt.getopt(sys.argv[1:], "hwluv:t:i:", ["help", "label=", "unit=", "value=","temperature=","humidity=", "websocket"])
@@ -95,7 +96,7 @@ except getopt.GetoptError:
 	exit(1)
 
 # Building the payload
-JSONPayload = {'value':float(value), 'unit':unit, 'label':label, '@timestamp':int(round(time.time() * 1000)), 'temperature':float(temperature), 'humidity':float(humidity), 'ID':os.environ.get('DEVICE_ID')}
+JSONPayload = {'value':float(value), 'unit':unit, 'label':label, '@timestamp':int(round(time.time() * 1000)), 'temperature':float(temperature), 'humidity':float(humidity), 'ID':clientId, 'ownerID':deviceOwner}
 print json.dumps(JSONPayload, ensure_ascii=True)
 
 # Missing configuration notification

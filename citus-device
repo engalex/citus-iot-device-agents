@@ -9,4 +9,9 @@ if [ -z "${SECRET_KEY}" ]; then
 		export SECRET_KEY=$(cat ${HOME}/.agent/.secret-key)
 	fi
 fi
+if [ -z "${DEVICE_OWNER}" ]; then
+	if [ -f "${HOME}/.agent/.device-owner" ]; then
+		export DEVICE_OWNER=$(cat ${HOME}/.agent/.device-owner)
+	fi
+fi
 /usr/sbin/citus/$@

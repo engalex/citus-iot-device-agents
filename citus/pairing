@@ -1,0 +1,35 @@
+#!/bin/sh
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[1;34m'
+NC='\033[1;30m' # No Color
+DEF='\033[0m' # Default Color
+
+export PYTHONIOENCODING=utf8
+LOCK_STATE=$HOME/.agent/.lock-state
+OWNER_STATE=$HOME/.agent/.device-owner
+
+if [ -f $LOCK_STATE ];
+then
+   	echo -e "${BLUE}INFO: Pairing device ${DEVICE_ID}...${NC}"
+ 	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/apisrv/device-management-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
+	DEVICE_OWNER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['owner']" 2> /dev/null)
+	DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']" 2> /dev/null)
+	PINCODE=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['pincode']" 2> /dev/null)	
+	echo "${DEVICE_OWNER}" > ${OWNER_STATE}
+	echo -e "${YELLOW}PINCODE: ${PINCODE}.${NC}"
+	
+	while [ ! -z "$PINCODE" -a "$PINCODE" != " " ]
+	do
+	   	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/apisrv/device-management-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
+	   	DEVICE_OWNER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['owner']" 2> /dev/null)	
+		PINCODE=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['pincode']" 2> /dev/null)
+		sleep 5
+	done
+	echo -e "${GREEN}SUCCESS: New Device Owner: ${DEVICE_OWNER}.${NC}"
+	echo "${DEVICE_OWNER}" > ${OWNER_STATE}
+else
+	echo -e "${RED}ERROR: This device is not installed yet.${NC}"
+fi
+echo -e "${DEF}"

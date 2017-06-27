@@ -12,7 +12,7 @@ if [ -f $LOCK_STATE ];
 then
    	echo -e "${BLUE}INFO: Removing device ${DEVICE_ID}...${NC}"
    	citus-device revoke
-   	citus-device cleanup   	
+   	citus-device cleanup  
 else
 	echo -e "${RED}ERROR: This device is not installed yet.${NC}"
 fi
