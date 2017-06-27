@@ -10,6 +10,8 @@ PINCODE=${1:-Unknown}
 TIMESTAMP=$(date +%s000)
 
 LOCK_STATE=$HOME/.agent/.lock-state
+OWNER_STATE=$HOME/.agent/.device-owner
+
 if [ -f $LOCK_STATE ];
 then
    	echo -e "${BLUE}INFO: The device ${DEVICE_ID} has already installed successfully.${NC}"
