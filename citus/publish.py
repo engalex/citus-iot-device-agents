@@ -23,6 +23,7 @@ import time
 import getopt
 import json
 import random
+from decimal import *
 
 # Usage
 usageInfo = """Usage:
@@ -53,7 +54,7 @@ helpInfo = """-l, --label
 
 
 """
-
+getcontext().prec = 2
 # Read in command-line parameters
 topic="telemetry/sensors"
 label="Leakage"
@@ -75,9 +76,7 @@ clientId = os.environ.get('DEVICE_ID')
 deviceOwner = os.environ.get('DEVICE_OWNER')
 
 try:
-	opts, args = getopt.getopt(sys.argv[1:], "hwlusvtip", ["help", "topic=", "label=", "unit=", "value=","temperature=","humidity=", "samples=", "websocket"])
-	if len(opts) == 0:
-		raise getopt.GetoptError("No input parameters!")
+	opts, args = getopt.getopt(sys.argv[1:], "hwlusvtip", ["help", "topic=", "label=", "unit=", "value=","temperature=","humidity=", "samples=", "websocket"])	
 	for opt, arg in opts:
 		if opt in ("-h", "--help"):
 			print(helpInfo)
@@ -99,12 +98,8 @@ try:
 		if opt in ("-w", "--websocket"):
 			useWebsocket = True
 except getopt.GetoptError:
-	print(usageInfo)
+	print(usageInfo)	
 	exit(1)
-
-# Building the payload
-JSONPayload = {'value':float(value), 'unit':unit, 'label':label, '@timestamp':int(round(time.time() * 1000)), 'temperature':float(temperature), 'humidity':float(humidity), 'ID':clientId, 'ownerID':deviceOwner}
-print json.dumps(JSONPayload, ensure_ascii=True)
 
 # Configure logging
 logger = logging.getLogger("AWSIoTPythonSDK.core")
@@ -138,6 +133,9 @@ time.sleep(2)
 
 count = 0
 while (count < number_of_samples):
+	# Building the payload
+	JSONPayload = {'value':float(round(value,2)), 'unit':unit, 'label':label, '@timestamp':int(round(time.time() * 1000)), 'temperature':float(round(temperature,2)), 'humidity':float(round(humidity,2)), 'ID':clientId, 'ownerID':deviceOwner}
+	print json.dumps(JSONPayload, ensure_ascii=True)
 	# Publish to the same topic in a loop forever
 	myAWSIoTMQTTClient.publish(topic, json.dumps(JSONPayload, ensure_ascii=True), 1)
 	value=random.uniform(1, 100)
