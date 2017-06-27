@@ -143,3 +143,6 @@ while (count < number_of_samples):
 	humidity=random.uniform(60, 90)
 	count = count + 1
 	time.sleep(1)
+
+print("Shuting down the sending process...")
+time.sleep(10)
