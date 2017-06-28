@@ -11,6 +11,7 @@ TIMESTAMP=$(date +%s000)
 
 LOCK_STATE=$HOME/.agent/.lock-state
 OWNER_STATE=$HOME/.agent/.device-owner
+SERVICE_STATE=$HOME/.agent/.service-endpoint
 
 if [ -f $LOCK_STATE ];
 then
@@ -25,6 +26,7 @@ else
 		mkdir -p $HOME/.agent/certs/
 		curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 		echo "${DEVICE_OWNER}" > ${OWNER_STATE}
+		echo "${SERVICE_ENDPOINT}" > ${SERVICE_STATE}
 		
 		RESULT=$(python /usr/sbin/citus/register.py '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'","pincode":"'"${PINCODE}"'"}')
 				

@@ -14,4 +14,9 @@ if [ -z "${DEVICE_OWNER}" ]; then
 		export DEVICE_OWNER=$(cat ${HOME}/.agent/.device-owner)
 	fi
 fi
+if [ -z "${SERVICE_ENDPOINT}" ]; then
+	if [ -f "${HOME}/.agent/.service-endpoint" ]; then
+		export SERVICE_ENDPOINT=$(cat ${HOME}/.agent/.service-endpoint)
+	fi
+fi
 /usr/sbin/citus/$@
