@@ -18,7 +18,7 @@ then
 	DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']" 2> /dev/null)
 	PINCODE=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['pincode']" 2> /dev/null)	
 	echo "${DEVICE_OWNER}" > ${OWNER_STATE}
-	echo -e "${YELLOW}PINCODE: ${PINCODE}.${NC}"
+	echo -e "${YELLOW}PINCODE: ${PINCODE} ${NC}"
 	
 	while [ ! -z "$PINCODE" -a "$PINCODE" != " " ]
 	do
@@ -27,7 +27,7 @@ then
 		PINCODE=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['pincode']" 2> /dev/null)
 		sleep 5
 	done
-	echo -e "${GREEN}SUCCESS: New Device Owner: ${DEVICE_OWNER} ${NC}"
+	echo -e "${GREEN}SUCCESS: New Device Owner: ${DEVICE_OWNER}.${NC}"
 	echo "${DEVICE_OWNER}" > ${OWNER_STATE}
 else
 	echo -e "${RED}ERROR: This device is not installed yet.${NC}"
