@@ -1,0 +1,14 @@
+#!/bin/sh
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[1;34m'
+NC='\033[1;30m' # No Color
+DEF='\033[0m' # Default Color
+
+export PYTHONIOENCODING=utf8
+echo -e "${BLUE}DEVICE_ID: ${DEVICE_ID}${NC}"
+echo -e "${BLUE}DEVICE_OWNER: ${DEVICE_OWNER}${NC}"
+echo -e "${BLUE}SECRET_KEY: ${SECRET_KEY}${NC}"
+echo -e "${BLUE}SERVICE_ENDPOINT: ${SERVICE_ENDPOINT}${NC}"
+echo -e "${DEF}"
