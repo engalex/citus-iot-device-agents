@@ -9,6 +9,6 @@ DEF='\033[0m' # Default Color
 export PYTHONIOENCODING=utf8
 echo -e "${BLUE}DEVICE_ID: ${DEVICE_ID}${NC}"
 echo -e "${BLUE}DEVICE_OWNER: ${DEVICE_OWNER}${NC}"
-echo -e "${BLUE}SECRET_KEY: ${SECRET_KEY}${NC}"
 echo -e "${BLUE}SERVICE_ENDPOINT: ${SERVICE_ENDPOINT}${NC}"
+echo -e "${BLUE}SECRET_KEY: ${SECRET_KEY}${NC}"
 echo -e "${DEF}"
