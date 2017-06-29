@@ -145,6 +145,7 @@ while (count < number_of_samples):
 	value=random.uniform(1, 100)
 	temperature=random.uniform(10, 40)
 	humidity=random.uniform(60, 90)
+	unit = (unit=="PPM"? "kWh": unit)
 	count = count + 1
 	time.sleep(1)
 
