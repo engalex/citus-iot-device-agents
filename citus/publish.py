@@ -88,13 +88,13 @@ try:
 		if opt in ("-u", "--unit"):
 			unit = arg
 		if opt in ("-v", "--value"):
-			value = arg
+			value = float(arg)
 		if opt in ("-t", "--temperature"):
-			temperature = arg
+			temperature = float(arg)
 		if opt in ("-i", "--humidity"):
-			humidity = arg
+			humidity = float(arg)
 		if opt in ("-n", "--samples"):
-			number_of_samples = arg
+			number_of_samples = int(arg)
 		if opt in ("-w", "--websocket"):
 			useWebsocket = True
 except getopt.GetoptError:
