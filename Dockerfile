@@ -11,7 +11,7 @@ RUN echo '{ "allow_root": true }'>.bowerrc
 RUN mkdir -p /root/.agent/ && touch /root/.agent/update.log
 
 # node-sass doesn't support Alpine, so we need the build toolchain.
-RUN apk --update add curl ca-certificates wget python build-base && update-ca-certificates &&\	
+RUN apk --update add curl ca-certificates wget python && update-ca-certificates &&\	
     rm -rf /var/lib/apt/lists/* &&\
     rm -rf /var/cache/apk/* &&\
     rm -rf /data
