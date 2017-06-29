@@ -29,12 +29,12 @@ from decimal import *
 usageInfo = """Usage:
 
 Use MQTT over TCP on port 8883
-$ citus-device send -p <topic> -v <value> -t <temperature> -i <humidity> -l <label> -u <unit> 
+$ citus-device send -p <topic> -v <value> -t <temperature> -i <humidity> -l <label> -u <unit> -s <samples>
 
 Use MQTT over WebSocket:
-$ citus-device send -p <topic> -v <value> -t <temperature> -i <humidity> -l <label> -u <unit> -w  
+$ citus-device send -p <topic> -v <value> -t <temperature> -i <humidity> -l <label> -u <unit> -s <samples> -w  
 
-Type "python publish.py -h" for available options.
+Type "citus-device send -h" for available options.
 """
 # Help info
 helpInfo = """-l, --label
@@ -47,6 +47,10 @@ helpInfo = """-l, --label
 	The ambient temperature
 -i, --humidity
 	The ambient humidity
+-p, --topic
+	The topic to send
+-s, --samples
+	The number of samples
 -w, --websocket
 	Use MQTT over WebSocket
 -h, --help
@@ -76,7 +80,7 @@ clientId = os.environ.get('DEVICE_ID')
 deviceOwner = os.environ.get('DEVICE_OWNER')
 
 try:
-	opts, args = getopt.getopt(sys.argv[1:], "hwlusvtip", ["help", "topic=", "label=", "unit=", "value=","temperature=","humidity=", "samples=", "websocket"])	
+	opts, args = getopt.getopt(sys.argv[1:], "hwlus:v:t:i:p", ["help", "topic=", "label=", "unit=", "value=","temperature=","humidity=", "samples=", "websocket"])	
 	for opt, arg in opts:
 		if opt in ("-h", "--help"):
 			print(helpInfo)
@@ -93,7 +97,7 @@ try:
 			temperature = float(arg)
 		if opt in ("-i", "--humidity"):
 			humidity = float(arg)
-		if opt in ("-n", "--samples"):
+		if opt in ("-s", "--samples"):
 			number_of_samples = int(arg)
 		if opt in ("-w", "--websocket"):
 			useWebsocket = True
