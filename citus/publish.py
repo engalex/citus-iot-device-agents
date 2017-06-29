@@ -136,6 +136,7 @@ myAWSIoTMQTTClient.connect()
 time.sleep(2)
 
 count = 0
+unit_s = unit
 while (count < number_of_samples):
 	# Building the payload
 	JSONPayload = {'value':float(round(value,2)), 'unit':unit, 'label':label, '@timestamp':int(round(time.time() * 1000)), 'temperature':float(round(temperature,2)), 'humidity':float(round(humidity,2)), 'ID':clientId, 'ownerID':deviceOwner}
@@ -145,7 +146,10 @@ while (count < number_of_samples):
 	value=random.uniform(1, 100)
 	temperature=random.uniform(10, 40)
 	humidity=random.uniform(60, 90)
-	unit = (unit=="PPM"? "kWh": unit)
+	if unit_s == "PPM":
+		unit_s = "kWh"
+	else:
+		unit_s = unit
 	count = count + 1
 	time.sleep(1)
 
