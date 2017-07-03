@@ -6,8 +6,10 @@ BLUE='\033[1;34m'
 NC='\033[1;30m' # No Color
 DEF='\033[0m' # Default Color
 DEVICE_NAME="FPT-"$(hostname)
-ACCESS_TOKEN=${1:-Unknown}
+
 LOCK_STATE=$HOME/.agent/.lock-state
+OWNER_STATE=$HOME/.agent/.device-owner
+SERVICE_STATE=$HOME/.agent/.service-endpoint
 CERTS_STATE=$HOME/.agent/certs
 TIMESTAMP=$(date +%s000)
 
@@ -16,14 +18,13 @@ then
    	echo -e "${BLUE}INFO: The certificates of device ${DEVICE_ID} has already installed successfully.${NC}"
 else	
 	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/apisrv/device-management-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
-	DEVICE_OWNER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['owner']" 2> /dev/null)
-	DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']" 2> /dev/null)
-	CERTIFICATE_ID=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['certificateId']" 2> /dev/null)
-	
+	DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']" 2> /dev/null)	
 	echo "${DEVICE_STATUS}" > "${LOCK_STATE}"
+	echo "${DEVICE_OWNER}" > ${OWNER_STATE}
+	echo "${SERVICE_ENDPOINT}" > ${SERVICE_STATE}
 	
 	if [ "${DEVICE_STATUS}" = "registered" ]; then
-		citus-device install-cert $ACCESS_TOKEN $CERTIFICATE_ID
+		citus-device install-cert
 	elif [ "${DEVICE_STATUS}" = "unregistered" ]; then
 		echo -e "${YELLOW}WARN: The device ${DEVICE_ID} has not activated yet therefore no certificate is available.${NC}"
 	else

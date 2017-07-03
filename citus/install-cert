@@ -5,11 +5,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[1;34m'
 NC='\033[1;30m' # No Color
 DEF='\033[0m' # Default Color
-
-ACCESS_TOKEN=${1:-Unknown}
-CERTIFICATE_ID=${2:-Unknown}
 CERTS_STATE=$HOME/.agent/certs
-DEVICE_OWNER=${3:-Unknown}
 
 if [ -f $CERTS_STATE ];
 then
@@ -18,11 +14,11 @@ else
 	mkdir -p $HOME/.agent/certs/
 	curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 	
-	python /usr/sbin/citus/getcert.py ${CERTIFICATE_ID} ${ACCESS_TOKEN}
+	python /usr/sbin/citus/getcert.py
 	
 	echo -e "${GREEN}INFO: Update Device Metadata Infor:${NC}"
 	
-	python /usr/sbin/citus/setinfo.py ${DEVICE_OWNER}
+	python /usr/sbin/citus/setinfo.py
 	
 	echo -e "${GREEN}INFO: Installed Certificates:${NC}"
 	ls -td $(find $HOME/.agent/certs/)
