@@ -11,13 +11,13 @@ if [ -f $CERTS_STATE ];
 then
    	echo -e "${BLUE}INFO: The certificates of device ${DEVICE_ID} has already installed successfully.${NC}"
 else
-	echo -e "${GREEN}INFO: Installing Certificates:${NC}"
+	echo -e "${GREEN}INFO: Installing Certificates...${NC}"
 	mkdir -p $HOME/.agent/certs/
 	curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 	
 	python /usr/sbin/citus/getcert.py
 	
-	echo -e "${GREEN}INFO: Update Device Metadata Infor:${NC}"
+	echo -e "${GREEN}INFO: Update Device Metadata Infor...${NC}"
 	
 	python /usr/sbin/citus/setinfo.py
 	
