@@ -139,7 +139,7 @@ count = 0
 unit_s = unit
 while (count < number_of_samples):
 	# Building the payload
-	JSONPayload = {'value':float(round(value,2)), 'unit':unit, 'label':label, '@timestamp':int(round(time.time() * 1000)), 'temperature':float(round(temperature,2)), 'humidity':float(round(humidity,2)), 'ID':clientId, 'ownerID':deviceOwner}
+	JSONPayload = {'value':float(round(value,2)), 'unit':unit_s, 'label':label, '@timestamp':int(round(time.time() * 1000)), 'temperature':float(round(temperature,2)), 'humidity':float(round(humidity,2)), 'ID':clientId, 'ownerID':deviceOwner}
 	print json.dumps(JSONPayload, ensure_ascii=True)
 	# Publish to the same topic in a loop forever
 	myAWSIoTMQTTClient.publish(topic, json.dumps(JSONPayload, ensure_ascii=True), 1)
