@@ -22,7 +22,7 @@ else
 	python /usr/local/bin/citus/setinfo.py ${DEVICE_OWNER}
 	
 	echo -e "${GREEN}INFO: Installed Certificates:${NC}"
-	ls -td $(find $HOME/.agent/certs/)
+	ls -td $(find $HOME/.agent/certs)
 	(echo "* * * * * /usr/local/bin/citus-device update >$HOME/.agent/update.log ") | crontab -
 fi
 echo -e "${DEF}"
