@@ -7,8 +7,8 @@ NC='\033[1;30m' # No Color
 DEF='\033[0m' # Default Color
 
 echo -e "${BLUE}INFO: Installing citus-device CLI libraries....${NC}"
-cp -r $HOME/citus-iot-device-agents/citus/ /usr/local/bin/
-cp $HOME/citus-iot-device-agents/citus-device /usr/local/bin/
+cp -r $HOME/citus-iot-device-installer/citus/ /usr/local/bin/
+cp $HOME/citus-iot-device-installer/citus-device /usr/local/bin/
 chmod +x /usr/local/bin/citus-device
 chmod +x /usr/local/bin/citus/*
 ln -s /usr/local/bin/citus-device /usr/bin/citus-device
