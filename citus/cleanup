@@ -14,6 +14,9 @@ then
    	rm -rf $HOME/.agent/
    	rm -rf /usr/local/bin/citus/
    	rm -f /usr/local/bin/citus-device
+   	if [ ! -f /usr/bin/sw_vers ]; then
+		unlink /usr/bin/citus-device
+	fi
    	echo -e "${BLUE}INFO: The Device is cleanned successfully.${NC}"   	
 else
 	echo -e "${RED}ERROR: This device is not installed yet.${NC}"
