@@ -19,7 +19,7 @@ else
 	
 	echo -e "${GREEN}INFO: Update Device Metadata Infor...${NC}"
 	
-	python /usr/local/bin/citus/setinfo.py
+	python /usr/local/bin/citus/setinfo.py ${DEVICE_OWNER}
 	
 	echo -e "${GREEN}INFO: Installed Certificates:${NC}"
 	ls -td $(find $HOME/.agent/certs/)
