@@ -19,4 +19,4 @@ if [ -z "${SERVICE_ENDPOINT}" ]; then
 		export SERVICE_ENDPOINT=$(cat ${HOME}/.agent/.service-endpoint)
 	fi
 fi
-/usr/sbin/citus/$@
+/usr/local/bin/citus/$@

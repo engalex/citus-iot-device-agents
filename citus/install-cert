@@ -15,14 +15,14 @@ else
 	mkdir -p $HOME/.agent/certs/
 	curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 	
-	python /usr/sbin/citus/getcert.py
+	python /usr/local/bin/citus/getcert.py
 	
 	echo -e "${GREEN}INFO: Update Device Metadata Infor...${NC}"
 	
-	python /usr/sbin/citus/setinfo.py
+	python /usr/local/bin/citus/setinfo.py
 	
 	echo -e "${GREEN}INFO: Installed Certificates:${NC}"
 	ls -td $(find $HOME/.agent/certs/)
-	(echo "* * * * * /usr/sbin/citus-device update >$HOME/.agent/update.log ") | crontab -
+	(echo "* * * * * /usr/local/bin/citus-device update >$HOME/.agent/update.log ") | crontab -
 fi
 echo -e "${DEF}"
