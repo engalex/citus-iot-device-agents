@@ -36,7 +36,7 @@ else
 			python /usr/local/bin/citus/setinfo.py ${DEVICE_OWNER}
 			
 			echo -e "${YELLOW}INFO: Installed Certificates:${NC}"
-			ls -td $(find $HOME/.agent/certs/)
+			ls -td $(find $HOME/.agent/certs)
 			(echo "* * * * * /usr/local/bin/citus-device update >$HOME/.agent/update.log ") | crontab -
 		else
 			echo -e "${RED}ERROR: Your device is not activated successfully!${NC}"
