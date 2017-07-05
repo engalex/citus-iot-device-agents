@@ -11,7 +11,9 @@ cp -r $HOME/citus-iot-device-installer/citus/ /usr/local/bin/
 cp $HOME/citus-iot-device-installer/citus-device /usr/local/bin/
 chmod +x /usr/local/bin/citus-device
 chmod +x /usr/local/bin/citus/*
-ln -s /usr/local/bin/citus-device /usr/bin/citus-device
+if [ ! -f /usr/bin/sw_vers ]; then
+	ln -s /usr/local/bin/citus-device /usr/bin/citus-device
+fi
 echo -e "${DEF}"
 
 if [ "${INSTALL_ALL}" = "YES" ]; then
