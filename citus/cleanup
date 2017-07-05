@@ -11,11 +11,20 @@ LOCK_STATE=$HOME/.agent/.lock-state
 if [ -f $LOCK_STATE ];
 then
    	echo -e "${BLUE}INFO: Cleanup device ${DEVICE_ID}...${NC}"   	
-   	rm -rf $HOME/.agent/
-   	rm -rf /usr/local/bin/citus/
-   	rm -f /usr/local/bin/citus-device
-   	if [ ! -f /usr/bin/sw_vers ]; then
-		unlink /usr/bin/citus-device
+   	if [ -f /usr/bin/sudo ]; then
+	   	sudo rm -rf $HOME/.agent/
+	   	sudo rm -rf /usr/local/bin/citus/
+	   	sudo rm -f /usr/local/bin/citus-device
+	   	if [ ! -f /usr/bin/sw_vers ]; then
+			sudo unlink /usr/bin/citus-device
+		fi
+	else
+		rm -rf $HOME/.agent/
+	   	rm -rf /usr/local/bin/citus/
+	   	rm -f /usr/local/bin/citus-device
+	   	if [ ! -f /usr/bin/sw_vers ]; then
+			unlink /usr/bin/citus-device
+		fi
 	fi
    	echo -e "${BLUE}INFO: This device is cleanned.${NC}"
 else
