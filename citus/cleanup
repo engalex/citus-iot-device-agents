@@ -17,7 +17,7 @@ then
    	if [ ! -f /usr/bin/sw_vers ]; then
 		unlink /usr/bin/citus-device
 	fi
-   	echo -e "${BLUE}INFO: The Device is cleanned successfully.${NC}"   	
+   	echo -e "${BLUE}INFO: This device is cleanned.${NC}"
 else
 	echo -e "${RED}ERROR: This device is not installed yet.${NC}"
 fi
