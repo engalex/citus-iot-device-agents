@@ -1,0 +1,13 @@
+#!/bin/sh
+TIMESTAMP=$(date +%s000)
+
+VALUE=$(awk 'NR==3 {print $3 "00"}' /proc/net/wireless)
+TEMPERATURE=${1:-0.0}
+HUMIDITY=${2:-0.0}
+
+mosquitto_pub \
+	--cert $HOME/.agent/certs/$DEVICE_ID.cert.pem \
+	--key $HOME/.agent/certs/$DEVICE_ID.private.key \
+	--cafile $HOME/.agent/certs/root-CA.crt \
+	-h $AWS_IOT_ADDRESS -p 8883 -t 'telemetry/sensors' \
+	-m '{"unit": "%", "temperature": '${TEMPERATURE}', "ownerID": "'${DEVICE_OWNER}'", "@timestamp": '${TIMESTAMP}', "humidity": '${HUMIDITY}', "ID": "'${DEVICE_ID}'", "value": '${VALUE}', "label": "WiFi Signal Strength"}'
