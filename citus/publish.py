@@ -142,13 +142,14 @@ while (count < number_of_samples):
 	JSONPayload = {'value':float(round(value,2)), 'unit':unit_s, 'label':label, '@timestamp':int(round(time.time() * 1000)), 'temperature':float(round(temperature,2)), 'humidity':float(round(humidity,2)), 'ID':clientId, 'ownerID':deviceOwner}
 	print json.dumps(JSONPayload, ensure_ascii=True)
 	# Publish to the same topic in a loop forever
-	myAWSIoTMQTTClient.publish(topic, json.dumps(JSONPayload, ensure_ascii=True), 1)
-	value=random.uniform(1, 100)
-	temperature=random.uniform(10, 40)
-	humidity=random.uniform(60, 90)
+	myAWSIoTMQTTClient.publish(topic, json.dumps(JSONPayload, ensure_ascii=True), 1)		
+	temperature=random.uniform(20, 40)
+	humidity=random.uniform(60, 80)
 	if unit_s == "PPM":
+		value=random.uniform(1, 100)
 		unit_s = "kWh"
 	else:
+		value=random.uniform(0.1, 10)
 		unit_s = unit
 	count = count + 1
 	time.sleep(1)
