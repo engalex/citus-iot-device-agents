@@ -15,7 +15,11 @@ if [ ! -d ./aws-iot-device-sdk-python ]; then
   git clone https://github.com/aws/aws-iot-device-sdk-python.git
   cd aws-iot-device-sdk-python/
   git checkout v1.1.1
-  python setup.py install
+  if [ -f /usr/bin/sudo ]; then
+  	sudo python setup.py install
+  else
+  	python setup.py install
+  fi
   echo -e "${BLUE}INFO: Citus IoT Device SDK has already installed successfully.${NC}"
   cd ../
 else
