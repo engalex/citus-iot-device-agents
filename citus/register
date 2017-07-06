@@ -12,6 +12,7 @@ TIMESTAMP=$(date +%s000)
 LOCK_STATE=$HOME/.agent/.lock-state
 OWNER_STATE=$HOME/.agent/.device-owner
 SERVICE_STATE=$HOME/.agent/.service-endpoint
+ENDPOINT_STATE=$HOME/.agent/.aws-endpoint
 
 if [ -f $LOCK_STATE ];
 then
@@ -20,13 +21,15 @@ else
 	DEVICE_OBJECT=$(curl -H "Content-Type: application/json" -L ${SERVICE_ENDPOINT}/apisrv/device-management-service/device/${DEVICE_ID}?secret_key=${SECRET_KEY})
 	DEVICE_OWNER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['owner']" 2> /dev/null)
 	DEVICE_STATUS=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['status']" 2> /dev/null)
-	SERIAL_NUMBER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']" 2> /dev/null)	
+	SERIAL_NUMBER=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serialNumber']" 2> /dev/null)
+	AWS_IOT_ENDPOINT=$(echo ${DEVICE_OBJECT} | python -c "import sys, json; print json.load(sys.stdin)['_metadata']['serviceEndpoint']" 2> /dev/null)	
 	
 	if [ "${DEVICE_STATUS}" = "unregistered" ]; then		
 		mkdir -p $HOME/.agent/certs/
 		curl -o "$HOME/.agent/certs/root-CA.crt" https://www.symantec.com/content/en/us/enterprise/verisign/roots/VeriSign-Class%203-Public-Primary-Certification-Authority-G5.pem
 		echo "${DEVICE_OWNER}" > ${OWNER_STATE}
 		echo "${SERVICE_ENDPOINT}" > ${SERVICE_STATE}
+		echo "${AWS_IOT_ENDPOINT}" > ${ENDPOINT_STATE}
 		
 		RESULT=$(python /usr/sbin/citus/register.py '{"name":"'"${DEVICE_ID}"'","serialNumber":"'"${SERIAL_NUMBER}"'","status":"'"${DEVICE_STATUS}"'","pincode":"'"${PINCODE}"'"}')
 		echo "${RESULT}" > ${LOCK_STATE}
