@@ -69,7 +69,7 @@ humidity=random.uniform(60, 90)
 number_of_samples=10
 
 useWebsocket = False
-host = "a1t67w73z7o66l.iot.ap-northeast-1.amazonaws.com"
+host = os.environ.get('AWS_IOT_ENDPOINT')
 if not os.environ.get('DEVICE_ID'):
 	print("Missing 'DEVICE_ID' in environment variables")
 	exit(1)
