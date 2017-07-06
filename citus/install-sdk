@@ -30,4 +30,4 @@ fi
 #printf "\nRuning pub/sub sample application...\n"
 #python aws-iot-device-sdk-python/samples/basicPubSub/basicPubSub.py -e a1t67w73z7o66l.iot.ap-northeast-1.amazonaws.com -r $HOME/.agent/certs/root-CA.crt -c $HOME/.agent/certs/${DEVICE_ID}.cert.pem -k $HOME/.agent/certs/${DEVICE_ID}.private.key
 echo -e "${BLUE}INFO: Testing the first sample connection to the cloud.${NC}"
-citus-device send -v 80 -t 25.5 -i 68.8
+citus-device send -v 80 -t 25.5 -i 68.8 -s 1
