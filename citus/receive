@@ -1,2 +1,2 @@
 #!/bin/sh
-python /usr/sbin/citus/subscribe.py $@
+python /usr/local/bin/citus/subscribe.py $@

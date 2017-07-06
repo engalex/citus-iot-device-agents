@@ -1,2 +1,2 @@
 #!/bin/sh
-python /usr/sbin/citus/publish.py $@
+python /usr/local/bin/citus/publish.py $@

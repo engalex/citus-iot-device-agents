@@ -24,4 +24,4 @@ if [ -z "${AWS_IOT_ENDPOINT}" ]; then
 		export AWS_IOT_ENDPOINT=$(cat ${HOME}/.agent/.aws-endpoint)
 	fi
 fi
-/usr/sbin/citus/$@
+/usr/local/bin/citus/$@
