@@ -19,8 +19,7 @@ if [ ! -d ./aws-iot-device-sdk-python ]; then
   	sudo python setup.py install
   else
   	python setup.py install
-  fi
-  echo -e "${BLUE}INFO: Citus IoT Device SDK has already installed successfully.${NC}"
+  fi  
   cd ../
 else
   echo -e "${BLUE}INFO: Citus IoT Device SDK has already installed yet.${NC}"
