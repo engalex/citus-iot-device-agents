@@ -9,11 +9,13 @@ do
         SHIFT_COUNT=$((LOOP_COUNT+3))
         VALUE=$(echo "$SCAN_RESULT" | awk 'NR=='$SHIFT_COUNT' {print $2}')
         LABEL=$(echo "$SCAN_RESULT" | awk 'NR=='$LOOP_COUNT' {print $5}')
+        NAME=$(echo "$SCAN_RESULT" | awk 'NR=='$((LOOP_COUNT+1))' {$1=""; print $0}')
         LOOP_COUNT=$((SHIFT_COUNT+2))
         if [[ "$VALUE" -gt "$SIGNAL" ]]
         then
             SIGNAL=$VALUE
             BSSID=$LABEL
+            ESSID=$NAME
         fi
 done
-echo $BSSID $SIGNAL
+echo $BSSID $SIGNAL$NAME
