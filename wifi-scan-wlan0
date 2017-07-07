@@ -1,0 +1,18 @@
+#https://api.mylnikov.org/wifi?v=1.1&bssid=F0:5C:19:31:84:E0
+SCAN_RESULT=$(iwinfo wlan0 scan)
+LOOP_COUNT=1
+SIGNAL=-100
+LABEL=""
+while [ "$LABEL" == "" ];
+do
+        SHIFT_COUNT=$((LOOP_COUNT+3))
+        VALUE=$(echo $SCAN_RESULT | awk 'NR=='$SHIFT_COUNT' {print $2}')
+        LABEL=$(echo $SCAN_RESULT | awk 'NR=='$LOOP_COUNT' {print $5}')
+        LOOP_COUNT=$((SHIFT_COUNT+2))
+        if (( VALUE > SIGNAL )); 
+        then
+            SIGNAL=$VALUE
+            BSSID=$LABEL
+        fi        
+done
+echo $BSSID $SIGNAL
