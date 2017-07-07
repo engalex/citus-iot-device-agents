@@ -8,14 +8,20 @@ while [ "$LABEL" == "" ]
 do
         SHIFT_COUNT=$((LOOP_COUNT+3))
         VALUE=$(echo "$SCAN_RESULT" | awk 'NR=='$SHIFT_COUNT' {print $2}')
-        LABEL=$(echo "$SCAN_RESULT" | awk 'NR=='$LOOP_COUNT' {print $5}')
-        NAME=$(echo "$SCAN_RESULT" | awk 'NR=='$((LOOP_COUNT+1))' {$1=""; print $0}')
+        NAME=$(echo "$SCAN_RESULT" | awk 'NR=='$LOOP_COUNT' {print $5}')
+	LABEL=$(echo "$SCAN_RESULT" | awk 'NR=='$((LOOP_COUNT+1))' {$1=""; print $0}')
         LOOP_COUNT=$((SHIFT_COUNT+2))
-        if [[ "$VALUE" -gt "$SIGNAL" ]]
+	if [[ "$VALUE" -gt "$SIGNAL" ]] 
         then
             SIGNAL=$VALUE
-            BSSID=$LABEL
-            ESSID=$NAME
-        fi
+            BSSID=$NAME
+	    ESSID=$LABEL
+        fi        
 done
-echo $BSSID $SIGNAL$NAME
+TIMESTAMP=$(date +%s000)
+mosquitto_pub \
+	--cert $HOME/.agent/certs/$DEVICE_ID.cert.pem \
+	--key $HOME/.agent/certs/$DEVICE_ID.private.key \
+	--cafile $HOME/.agent/certs/root-CA.crt \
+	-h $AWS_IOT_ADDRESS -p 8883 -t 'telemetry/sensors' \
+	-m '{"unit": "dB", "temperature": 0.0, "ownerID": "'${DEVICE_OWNER}'", "@timestamp": '${TIMESTAMP}', "humidity": 0.0, "ID": "'${DEVICE_ID}'", "value": '${SIGNAL}', "label":"'${BSSID}'"}'
