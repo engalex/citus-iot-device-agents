@@ -1,4 +1,5 @@
 #!/bin/sh
+unset n
 LINK=$(iwinfo wlan0 info | awk 'NR==2 {print $3}')
 if [[ ! "$LINK" == "" ]]
 then
@@ -15,6 +16,8 @@ then
                 -h $AWS_IOT_ADDRESS -p 8883 -t 'telemetry/sensors' \
                -m '{"unit": "dB", "temperature": 0.0, "ownerID": "'${DEVICE_OWNER}'", "@timestamp": '${TIMESTAMP}', "humidity": 0.0, "ID": "'${DEVICE_ID}'", "value": '${SIGNAL}', "label":"'${BSSID}'"}'
         fi
+        : $[n++]
+        sleep 1
     done < /tmp/data
-    echo "" > /tmp/data
+    sed -i "1,$n d" /tmp/data
 fi
