@@ -3,6 +3,7 @@
 if [ -f /tmp/last-bssid ]; then
     LAST_BSSID=$(cat /tmp/last-bssid)
 fi
+LINK=$(iwinfo wlan0 info | awk 'NR==2 {print $3}')
 SCAN_RESULT=$(iwinfo wlan0 scan)
 LOOP_COUNT=1
 SIGNAL=-99
@@ -24,7 +25,7 @@ do
             ESSID=$LABEL
     fi        
 done
-if [[ ! "$LAST_BSSID" == "$BSSID" ]]
+if [[ ! "$LAST_BSSID" == "$BSSID" ]] && [[ ! "$BSSID" == "$LINK" ]]
 then
     echo "$BSSID" > /tmp/last-bssid
     TIMESTAMP=$(date +%s000)
