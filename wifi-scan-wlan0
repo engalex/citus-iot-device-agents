@@ -29,10 +29,13 @@ if [[ ! "$LAST_BSSID" == "$BSSID" ]]
 then
     echo "$BSSID" > /tmp/last-bssid
     TIMESTAMP=$(date +%s000)
-    echo "$TIMESTAMP $BSSID $SIGNAL" >> /tmp/data
-    if [[ ! "$LINK" == "" ]]
-    then
-        while read -r line; do
+    echo "$TIMESTAMP $BSSID $SIGNAL" >> /tmp/data    
+fi
+if [[ ! "$LINK" == "" ]]
+then
+    while read -r line; do
+        if [[ ! "$line" == "" ]]
+        then
             TIMESTAMP=$(line | awk 'NR==1 {print $1}')
             BSSID=$(line | awk 'NR==1 {print $2}')
             SIGNAL=$(line | awk 'NR==1 {print $3}')
@@ -41,7 +44,8 @@ then
                 --key $HOME/.agent/certs/$DEVICE_ID.private.key \
                 --cafile $HOME/.agent/certs/root-CA.crt \
                 -h $AWS_IOT_ADDRESS -p 8883 -t 'telemetry/sensors' \
-                -m '{"unit": "dB", "temperature": 0.0, "ownerID": "'${DEVICE_OWNER}'", "@timestamp": '${TIMESTAMP}', "humidity": 0.0, "ID": "'${DEVICE_ID}'", "value": '${SIGNAL}', "label":"'${BSSID}'"}'
-        done < /tmp/data
-    fi
+               -m '{"unit": "dB", "temperature": 0.0, "ownerID": "'${DEVICE_OWNER}'", "@timestamp": '${TIMESTAMP}', "humidity": 0.0, "ID": "'${DEVICE_ID}'", "value": '${SIGNAL}', "label":"'${BSSID}'"}'
+        fi
+    done < /tmp/data
+    echo "" > /tmp/data
 fi
