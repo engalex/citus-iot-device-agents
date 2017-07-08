@@ -1,23 +1,29 @@
 #!/bin/sh
-unset n
+NUM_OF_SAMPLES=0
 LINK=$(iwinfo wlan0 info | awk 'NR==2 {print $3}')
 if [[ ! "$LINK" == "" ]]
 then
-    while read -r line; do
+    while read -r line
+    do
         if [[ ! "$line" == "" ]]
         then
-            TIMESTAMP=$(line | awk 'NR==1 {print $1}')
-            BSSID=$(line | awk 'NR==1 {print $2}')
-            SIGNAL=$(line | awk 'NR==1 {print $3}')
+            TIMESTAMP=$(echo $line | awk 'NR==1 {print $1}')
+            BSSID=$(echo $line | awk 'NR==1 {print $2}')
+            SIGNAL=$(echo $line | awk 'NR==1 {print $3}')
             mosquitto_pub \
                 --cert $HOME/.agent/certs/$DEVICE_ID.cert.pem \
                 --key $HOME/.agent/certs/$DEVICE_ID.private.key \
                 --cafile $HOME/.agent/certs/root-CA.crt \
                 -h $AWS_IOT_ADDRESS -p 8883 -t 'telemetry/sensors' \
-               -m '{"unit": "dB", "temperature": 0.0, "ownerID": "'${DEVICE_OWNER}'", "@timestamp": '${TIMESTAMP}', "humidity": 0.0, "ID": "'${DEVICE_ID}'", "value": '${SIGNAL}', "label":"'${BSSID}'"}'
+                -m '{"unit": "dB", "temperature": 0.0, "ownerID": "'${DEVICE_OWNER}'", "@timestamp": '${TIMESTAMP}', "humidity": 0.0, "ID": "'${DEVICE_ID}'", "value": '${SIGNAL}', "label":"'${BSSID}'"}'
         fi
-        : $[n++]
-        sleep 1
+        NUM_OF_SAMPLES=$((NUM_OF_SAMPLES+1))
+        if [[ $(( NUM_OF_SAMPLES < 30 )) -ne 0 ]]
+        then
+            sleep 1
+        else
+            break
+        fi
     done < /tmp/data
-    sed -i "1,$n d" /tmp/data
+    sed -i "1,$NUM_OF_SAMPLES d" /tmp/data
 fi
