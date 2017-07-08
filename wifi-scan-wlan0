@@ -29,16 +29,19 @@ if [[ ! "$LAST_BSSID" == "$BSSID" ]]
 then
     echo "$BSSID" > /tmp/last-bssid
     TIMESTAMP=$(date +%s000)
-    echo "$TIMESTAMP $BSSID ${SIGNAL}dB"
-    if [[ ! "$LINK" == "" ]] && [[ ! "$LAST_BSSID" == "$BSSID" ]]
+    echo "$TIMESTAMP $BSSID $SIGNAL" >> /tmp/data
+    if [[ ! "$LINK" == "" ]]
     then
-        mosquitto_pub \
-            --cert $HOME/.agent/certs/$DEVICE_ID.cert.pem \
-            --key $HOME/.agent/certs/$DEVICE_ID.private.key \
-            --cafile $HOME/.agent/certs/root-CA.crt \
-            -h $AWS_IOT_ADDRESS -p 8883 -t 'telemetry/sensors' \
-            -m '{"unit": "dB", "temperature": 0.0, "ownerID": "'${DEVICE_OWNER}'", "@timestamp": '${TIMESTAMP}', "humidity": 0.0, "ID": "'${DEVICE_ID}'", "value": '${SIGNAL}', "label":"'${BSSID}'"}'
-    else
-        echo "$TIMESTAMP $BSSID" >> /tmp/data	
+        while read -r line; do
+            TIMESTAMP=$(line | awk 'NR==1 {print $1}')
+            BSSID=$(line | awk 'NR==1 {print $2}')
+            SIGNAL=$(line | awk 'NR==1 {print $3}')
+            mosquitto_pub \
+                --cert $HOME/.agent/certs/$DEVICE_ID.cert.pem \
+                --key $HOME/.agent/certs/$DEVICE_ID.private.key \
+                --cafile $HOME/.agent/certs/root-CA.crt \
+                -h $AWS_IOT_ADDRESS -p 8883 -t 'telemetry/sensors' \
+                -m '{"unit": "dB", "temperature": 0.0, "ownerID": "'${DEVICE_OWNER}'", "@timestamp": '${TIMESTAMP}', "humidity": 0.0, "ID": "'${DEVICE_ID}'", "value": '${SIGNAL}', "label":"'${BSSID}'"}'
+        done < /tmp/data
     fi
 fi
