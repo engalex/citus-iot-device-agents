@@ -1,27 +1,44 @@
 #!/bin/sh
 #https://api.mylnikov.org/wifi?v=1.1&bssid=F0:5C:19:31:84:E0
+if [ -f /tmp/last-bssid ]; then
+    LAST_BSSID=$(cat /tmp/last-bssid)
+fi
 SCAN_RESULT=$(iwinfo wlan0 scan)
 LOOP_COUNT=1
-SIGNAL=-100
-LABEL=""
-while [ "$LABEL" == "" ]
+SIGNAL=-99
+NAME="00:00:00:00"
+LINK=$(iwinfo wlan0 info | awk 'NR==2 {print $3}')
+while [[ ! "$NAME" == "" ]]
 do
-        SHIFT_COUNT=$((LOOP_COUNT+3))
-        VALUE=$(echo "$SCAN_RESULT" | awk 'NR=='$SHIFT_COUNT' {print $2}')
-        NAME=$(echo "$SCAN_RESULT" | awk 'NR=='$LOOP_COUNT' {print $5}')
-	LABEL=$(echo "$SCAN_RESULT" | awk 'NR=='$((LOOP_COUNT+1))' {$1=""; print $0}')
-        LOOP_COUNT=$((SHIFT_COUNT+2))
-	if [[ "$VALUE" -gt "$SIGNAL" ]] 
-        then
+    SHIFT_COUNT=$((LOOP_COUNT+3))
+    VALUE=$(echo "$SCAN_RESULT" | awk 'NR=='$SHIFT_COUNT' {print $2}')
+    NAME=$(echo "$SCAN_RESULT" | awk 'NR=='$LOOP_COUNT' {print $5}')
+    LABEL=$(echo "$SCAN_RESULT" | awk 'NR=='$((LOOP_COUNT+1))' {$1=""; print $0}')
+    LOOP_COUNT=$((SHIFT_COUNT+3))
+    if [[ "$VALUE" == "" ]]; then
+        VALUE=-99
+    fi
+    if [[ $(( VALUE > SIGNAL )) -ne 0 ]] && [[ ! "$BSSID" == "$LINK" ]]
+    then
             SIGNAL=$VALUE
             BSSID=$NAME
-	    ESSID=$LABEL
-        fi        
+            ESSID=$LABEL
+    fi        
 done
-TIMESTAMP=$(date +%s000)
-mosquitto_pub \
-	--cert $HOME/.agent/certs/$DEVICE_ID.cert.pem \
-	--key $HOME/.agent/certs/$DEVICE_ID.private.key \
-	--cafile $HOME/.agent/certs/root-CA.crt \
-	-h $AWS_IOT_ADDRESS -p 8883 -t 'telemetry/sensors' \
-	-m '{"unit": "dB", "temperature": 0.0, "ownerID": "'${DEVICE_OWNER}'", "@timestamp": '${TIMESTAMP}', "humidity": 0.0, "ID": "'${DEVICE_ID}'", "value": '${SIGNAL}', "label":"'${BSSID}'"}'
+if [[ ! "$LAST_BSSID" == "$BSSID" ]]
+then
+    echo "$BSSID" > /tmp/last-bssid
+    TIMESTAMP=$(date +%s000)
+    echo "$TIMESTAMP $BSSID ${SIGNAL}dB"
+    if [[ ! "$LINK" == "" ]] && [[ ! "$LAST_BSSID" == "$BSSID" ]]
+    then
+        mosquitto_pub \
+            --cert $HOME/.agent/certs/$DEVICE_ID.cert.pem \
+            --key $HOME/.agent/certs/$DEVICE_ID.private.key \
+            --cafile $HOME/.agent/certs/root-CA.crt \
+            -h $AWS_IOT_ADDRESS -p 8883 -t 'telemetry/sensors' \
+            -m '{"unit": "dB", "temperature": 0.0, "ownerID": "'${DEVICE_OWNER}'", "@timestamp": '${TIMESTAMP}', "humidity": 0.0, "ID": "'${DEVICE_ID}'", "value": '${SIGNAL}', "label":"'${BSSID}'"}'
+    else
+        echo "$TIMESTAMP $BSSID" >> /tmp/data	
+    fi
+fi
