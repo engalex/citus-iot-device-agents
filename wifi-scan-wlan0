@@ -18,7 +18,7 @@ do
     if [[ "$VALUE" == "" ]]; then
         VALUE=-99
     fi
-    if [[ $(( VALUE > SIGNAL )) -ne 0 ]] && [[ ! "$BSSID" == "$LINK" ]]
+    if [[ $(( VALUE > SIGNAL )) -ne 0 ]] && [[ ! "$NAME" == "$LINK" ]]
     then
             SIGNAL=$VALUE
             BSSID=$NAME
