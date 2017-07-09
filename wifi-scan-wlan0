@@ -29,5 +29,5 @@ if [[ ! "$LAST_BSSID" == "$BSSID" ]] && [[ ! "$BSSID" == "$LINK" ]]
 then
     echo "$BSSID" > /tmp/last-bssid
     TIMESTAMP=$(date +%s000)
-    echo "$TIMESTAMP $BSSID $SIGNAL" >> /tmp/data    
+    echo "$TIMESTAMP $BSSID $SIGNAL" >> /tmp/data-proximity    
 fi
