@@ -14,8 +14,8 @@ then
                 --cert $HOME/.agent/certs/$DEVICE_ID.cert.pem \
                 --key $HOME/.agent/certs/$DEVICE_ID.private.key \
                 --cafile $HOME/.agent/certs/root-CA.crt \
-                -h $AWS_IOT_ADDRESS -p 8883 -t 'telemetry/sensors' \
-                -m '{"unit": "dB", "temperature": 0.0, "ownerID": "'${DEVICE_OWNER}'", "@timestamp": '${TIMESTAMP}', "humidity": 0.0, "ID": "'${DEVICE_ID}'", "value": '${SIGNAL}', "label":"'${BSSID}'"}'
+                -h $AWS_IOT_ADDRESS -p 8883 -t 'tracking/proximity' \
+                -m '{"@timestamp": '${TIMESTAMP}', "ID": "'${DEVICE_ID}'", "ownerID": "'${DEVICE_OWNER}'", "signal": '${SIGNAL}', "bssid":"'${BSSID}'"}'
         fi
         NUM_OF_SAMPLES=$((NUM_OF_SAMPLES+1))
         if [[ $(( NUM_OF_SAMPLES < 30 )) -ne 0 ]]
@@ -24,6 +24,6 @@ then
         else
             break
         fi
-    done < /tmp/data
-    sed -i "1,$NUM_OF_SAMPLES d" /tmp/data
+    done < /tmp/data-proximity
+    sed -i "1,$NUM_OF_SAMPLES d" /tmp/data-proximity
 fi
